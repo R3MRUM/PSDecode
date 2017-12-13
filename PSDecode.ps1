@@ -72,7 +72,7 @@ function Invoke-Item()
 
     while($layers -notcontains $encoded_script){
         $layers += $encoded_script
-        $encoded_script = powershell $decoder
+        $encoded_script = (powershell $decoder 2> $null)
         if ($LastExitCode -ne 0 -Or $encoded_script.StartsWith("Exception")){
             Break
             }
