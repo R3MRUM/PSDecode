@@ -7,9 +7,9 @@ This is a PowerShell script for deobfuscating other encoded PowerShell scripts. 
 1. Copy PSDecode.psm1 into $PSHome\Modules\
 2. Open a new instance of PowerShell
 3. Option #1 [Pass encoded PowerShell via File]:
-> PSDecode .\encoded_ps.ps1
+<pre> > PSDecode .\encoded_ps.ps1 </pre>
 4. Option #2 [Pass encoded PowerShell via PIPE]:
-> Get-Content .\encoded_ps.ps1 | PSDecode
+<pre> > Get-Content .\encoded_ps.ps1 | PSDecode </pre>
 
 # Output Example
 ```PowerShell
