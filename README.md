@@ -4,9 +4,12 @@ This is a PowerShell script for deobfuscating other encoded PowerShell scripts. 
 ** Important Note: Only run this script within an isolated sandbox. If the encoded powershell attempts to execute a function which I have not accounted for, IT WILL EXECUTE **
 
 # To Use
-1. Import the module:   > import-module .\PSDecode.ps1
-2. Option #1 [Pass encoded PowerShell via File]: > PSDecode .\encoded_ps.ps1
-3. Option #2 [Pass encoded PowerShell via PIPE]: > Get-Content .\encoded_ps.ps1 | PSDecode
+1. Copy PSDecode.psm1 into $PSHome\Modules\
+2. Open a new instance of PowerShell
+3. Option #1 [Pass encoded PowerShell via File]:
+> PSDecode .\encoded_ps.ps1
+4. Option #2 [Pass encoded PowerShell via PIPE]:
+> Get-Content .\encoded_ps.ps1 | PSDecode
 
 # Output Example
 ```PowerShell
