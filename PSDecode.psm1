@@ -79,7 +79,7 @@ function new-object {
             [String]$Obj
         )
 
-        if($Obj -eq 'System.Net.WebClient'){
+        if($Obj -ieq 'System.Net.WebClient'){
             $webclient_obj = [PsCustomObject]
             Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Name "DownloadFile" -Value {
                 param([string]$url,[string]$destination)
@@ -92,7 +92,7 @@ function new-object {
                 }
             return $webclient_obj
         }
-        elseif($Obj -eq 'random'){
+        elseif($Obj -ieq 'random'){
             $random_obj = [PsCustomObject]
             Add-Member -memberType ScriptMethod -InputObject $random_obj -Name "next" -Value {
                 param([int]$min,[int]$max)
@@ -130,38 +130,42 @@ function new-object {
     $override_functions += $Invoke_Item_Override
     $override_functions += $New_Object_Override
 
-    $decoder = ($override_functions -join "`r`n") + "`r`n`r`n" + $encoded_script
+    $decoder = ($override_functions -join "`r`n") + "`r`n`r`n" + ($encoded_script -replace("``",""))
 
-    $layers = @()
-    $actions = @()
+    $Layers  = New-Object System.Collections.Generic.List[System.Object]
+    $actions = New-Object System.Collections.Generic.List[System.Object]
  
-    while($layers -notcontains $encoded_script){
+    while($layers -notcontains $encoded_script -and -not [string]::IsNullOrEmpty($encoded_script)){
 
-        $layers += $encoded_script
-        $encoded_script = (powershell $decoder 2> $null)
+        $layers.Add($encoded_script)
+        $encoded_script = (powershell $decoder)
 
-        if ( $encoded_script.GetType().FullName -eq "System.Object[]"){
-           $actions += $encoded_script.split('%#',[System.StringSplitOptions]::RemoveEmptyEntries).Trim()
+        if (-not [string]::IsNullOrEmpty($encoded_script) -and $encoded_script.GetType().FullName -eq "System.Object[]" -and $encoded_script -match '%#'){
+           $actions = $encoded_script.split('%#',[System.StringSplitOptions]::RemoveEmptyEntries).Trim()
            Break
         }
 
-        ElseIf ($LastExitCode -ne 0 -Or $encoded_script.StartsWith("Exception")){
+        ElseIf (-not $?){
             Break
             }
-
-        $decoder = ($override_functions -join "`r`n`r`n") + "`r`n`r`n" + $encoded_script
+        
+        $decoder = ($override_functions -join "`r`n`r`n") + "`r`n`r`n" + ($encoded_script -replace("``",""))
          }
 
-    for ($i=0; $i -le $layers.length-1; $i++){
-        $heading = "`r`n`r`n" + "#"*30 + " Layer " + ($i+1) + " " + "#"*30
-        Write-Host $heading
-        Write-Host $layers[$i]
+    if($layers.Count -gt 0){
+        ForEach ($layer in $layers){
+            $heading = "`r`n`r`n" + "#"*30 + " Layer " + ($layers.IndexOf($layer)+1) + " " + "#"*30
+            Write-Host $heading
+            Write-Host $layer
+            }
         }
 
-    $heading = "`r`n`r`n" + "#"*30 + " Actions " + "#"*30
-    Write-Host $heading
-    for ($i=0; $i -le $actions.length-1; $i++){
-        Write-Host "$($i+1). $($actions[$i])"
+    if($actions.Count -gt 0){
+        $heading = "`r`n`r`n" + "#"*30 + " Actions " + "#"*30
+        Write-Host $heading        
+
+        ForEach ($action in $actions){
+            Write-Host "$($actions.IndexOf($action)+1). $($action)"
+            }
         }
-            
 }
