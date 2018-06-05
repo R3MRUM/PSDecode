@@ -8,6 +8,8 @@
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM 
+.PARAMETER u
+    Default encoding expected is ASCII. This switch tells PSDecode that the script being decoded is Unicode encoded.
 .LINK
     https://github.com/R3MRUM/PSDecode
 .LINK
@@ -28,7 +30,9 @@ function PSDecode {
         [Parameter( `
                 Mandatory=$True, `
                 Valuefrompipeline = $True)]
-        [PSObject[]]$InputObject
+        [PSObject[]]$InputObject,
+        [Parameter(Mandatory=$False)]
+        [switch]$u
        )
 
 $Invoke_Expression_Override = @'
@@ -118,7 +122,12 @@ function new-object {
     else {
         try {
                 #from file
-                $encoded_script = Get-Content $InputObject -ErrorAction Stop
+                if($u){
+                    $encoded_script = Get-Content $InputObject -Encoding Unicode -ErrorAction Stop
+                   }
+                else{
+                    $encoded_script = Get-Content $InputObject -Encoding Ascii -ErrorAction Stop
+                    }
             }
         catch {
                 throw "Error reading: '$($InputObject)'"
