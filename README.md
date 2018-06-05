@@ -66,6 +66,7 @@ ricajoy.com/wef346645'.Split(',');$karapas = $nsadasd.next(1, 343245);$huas = $e
 ```
 # Change Log
 * 2018.06.05
+  * Included -u switch that users will need to specify if the powershell script they are attempting to decode is Unicode encoded.
   * Updated script to properly handle the presence of whitespace characters wrapped in quotes.
 * 2018.05.30
   * Added better handling of double quotes during script building to eliminate hard failure.
