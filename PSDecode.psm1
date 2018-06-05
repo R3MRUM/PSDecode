@@ -130,14 +130,14 @@ function new-object {
     $override_functions += $Invoke_Item_Override
     $override_functions += $New_Object_Override
 
-    $decoder = ($override_functions -join "`r`n") + "`r`n`r`n" + ($encoded_script -replace("``","") -replace('"','\"'))
+    $decoder = ($override_functions -join "`r`n") + "`r`n`r`n" + ($encoded_script -replace("``","") -replace('"','\"') -replace("'\s*'", "''"))
 
     $Layers  = New-Object System.Collections.Generic.List[System.Object]
     $actions = New-Object System.Collections.Generic.List[System.Object]
  
     while($layers -notcontains $encoded_script -and -not [string]::IsNullOrEmpty($encoded_script)){
 
-        $layers.Add($encoded_script -replace("``","") -replace("'\+'",""))
+        $layers.Add($encoded_script -replace("``","") -replace("'\+'","") -replace("'\s*'", "''"))
         $encoded_script = (powershell $decoder)
 
         if (-not [string]::IsNullOrEmpty($encoded_script) -and $encoded_script.GetType().FullName -eq "System.Object[]" -and $encoded_script -match '%#'){
@@ -149,7 +149,7 @@ function new-object {
             Break
             }
         
-        $decoder = ($override_functions -join "`r`n`r`n") + "`r`n`r`n" + ($encoded_script -replace("``","") -replace('"','\"'))
+        $decoder = ($override_functions -join "`r`n`r`n") + "`r`n`r`n" + ($encoded_script -replace("``","") -replace('"','\"') -replace("'\s*'", "''"))
          }
 
     if($layers.Count -gt 0){
