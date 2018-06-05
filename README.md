@@ -9,9 +9,14 @@ This is a PowerShell script for deobfuscating other encoded PowerShell scripts. 
 1. Copy PSDecode.psm1 into $PSHome\Modules\
 2. Open a new instance of PowerShell
 3. Option #1 [Pass encoded PowerShell via File]:
-<pre> > PSDecode .\encoded_ps.ps1 </pre>
+<pre> > PSDecode .\encoded_ps.ps1</pre>
+or if the malicious script is Unicode:
+<pre> > PSDecode .\uencoded_ps.ps1 -u</pre>
 4. Option #2 [Pass encoded PowerShell via PIPE]:
 <pre> > Get-Content .\encoded_ps.ps1 | PSDecode </pre>
+
+# Optional Parameter
+  -u: Default file encoding expected is ASCII. This switch tells PSDecode that the script being decoded is Unicode encoded.
 
 # Output Example
 ```PowerShell
