@@ -18,6 +18,11 @@ or if the malicious script is Unicode:
 # Optional Parameter
   -u: Default file encoding expected is ASCII. This switch tells PSDecode that the script being decoded is Unicode encoded.
 
+# Example Powershell Scripts:
+In this repository, I've included Emotet_PowerShell_Examples.zip, which contains a few different **LIVE** emotet PowerShell scripts. You can use these to play around with PSDecode and get a better understanding of how it is supposed to function. It is important to note that **these examples are malicious** and could potentially result in an infection if handled improperly. These are provided for educational purposes only and I assume no responsibility for what you do with them. You've been warned.
+
+The password for the archive is: **infected**
+
 # Output Example
 ```PowerShell
 ############################## Layer 1 ##############################
