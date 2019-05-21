@@ -61,12 +61,12 @@ $PGcAQBC='YUAUko'
 ```
 # Change Log
 * 2019.05.20
- * Added Get-Item override.
- * Implemented string formatting resolver.
- * Automatic input encoding detection. -u switch is no longer required.
- * Can now handle Base64 encoded input.
- * Final layer is now Beautified.
- * DownloadFile action now only takes up a single line in the Actions output.
+  * Added Get-Item override.
+  * Implemented string formatting resolver.
+  * Automatic input encoding detection. -u switch is no longer required.
+  * Can now handle Base64 encoded input.
+  * Final layer is now Beautified.
+  * DownloadFile action now only takes up a single line in the Actions output.
 * 2018.06.05
   * Included -u switch that users will need to specify if the powershell script they are attempting to decode is Unicode encoded.
   * Updated script to properly handle the presence of whitespace characters wrapped in quotes.
