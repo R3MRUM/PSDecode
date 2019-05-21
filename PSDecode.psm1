@@ -7,9 +7,8 @@
     ** Important Note: Only run this script within an isolated sandbox. If the encoded powershell attempts to execute a function which I have not accounted for, there is a chance it could execute.**
 .NOTES
     File Name  : PSDecode.psm1
-    Author     : @R3MRUM 
-.PARAMETER u
-    Default encoding expected is ASCII. This switch tells PSDecode that the script being decoded is Unicode encoded.
+    Author     : @R3MRUM
+	Version    : 3.0
 .LINK
     https://github.com/R3MRUM/PSDecode
 .LINK
@@ -23,17 +22,6 @@
     Get-Content .\encoded_ps.ps1 | PSDecode 
 .COMPONENT
 #>
-
-function PSDecode {
-    [CmdletBinding()]
-    param(
-        [Parameter( `
-                Mandatory=$True, `
-                Valuefrompipeline = $True)]
-        [PSObject[]]$InputObject,
-        [Parameter(Mandatory=$False)]
-        [switch]$u
-       )
 
 $Invoke_Expression_Override = @'
 function Invoke-Expression()
@@ -67,28 +55,47 @@ function Invoke-Item()
         param(
             [Parameter( `
                 Mandatory=$True, `
-                Valuefrompipeline = $true)]
+                Valuefrompipeline = $True)]
             [String]$Item
         )
         Write-Host "%#[Invoke-Item] Execute/Open: $($Item)"
     }
 '@
 
-$New_Object_Override = @'
-function new-object {
+$Get_Item_Override = @'
+function Get-Item()
+    {
         param(
             [Parameter( `
                 Mandatory=$True, `
                 Valuefrompipeline = $True)]
+            [String]$Item
+        )
+        $myHashtable = @{
+                            Item = $Item
+                        }
+        $getitem_obj = [PsCustomObject]$myHashtable
+        Add-Member -Membertype ScriptProperty -InputObject $getitem_obj -Name Length -Value {
+            $get_item_return_val = 100000
+            Write-Host "%#[Get-Item.length] Retrieving length of $($get_item_return_val) for: $($this.Item)"
+            return $get_item_return_val
+            }
+        return $getitem_obj
+    }
+'@
+
+$New_Object_Override = @'
+function new-object {
+        param(
+            [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
             [String]$Obj
         )
 
-        if($Obj -ieq 'System.Net.WebClient'){
+        if($Obj -ieq 'System.Net.WebClient' -or $Obj -ieq 'Net.WebClient'){
             $webclient_obj = [PsCustomObject]
             Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Name "DownloadFile" -Value {
                 param([string]$url,[string]$destination)
-                Write-Host "%#[System.Net.WebClient.DownloadFile] Download from: $($url)"
-                Write-Host "%#[System.Net.WebClient.DownloadFile] Save downloaded file to: $($destination)"
+                Write-Host "%#[System.Net.WebClient.DownloadFile] Download From: $($url) --> Save To: $($destination)"
                 }
             Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Name "DownloadString" -Value {
                 param([string]$url)
@@ -107,10 +114,142 @@ function new-object {
             return $random_obj
         }
         else{
-            Write-Host "Unknown object type found: $($Obj)"
+            Write-Host "ERROR: Unknown object type found: $($Obj)"
         }
     }
 '@
+
+function Get_Encoding_Type {
+    param(
+        [Parameter(Mandatory=$True)]
+        [Byte[]]$input_bytes
+        )
+     if($input_bytes[0] -eq 0xEF -and $input_bytes[1] -eq 0xBB -and $input_bytes[2] -eq 0xBF){
+        return 'UTF8'
+        }
+    elseif($input_bytes[0] -eq 0xFE -and $input_bytes[1] -eq 0xFF){
+        return 'UTF16-BE'
+        }
+    elseif($input_bytes[0] -eq 0xFF -and $input_bytes[1] -eq 0xFE){
+        return 'UTF16-LE'
+        }
+    elseif($input_bytes[1] -eq 0x00 -and $input_bytes[3] -eq 0x00 -and $input_bytes[5] -eq 0x00 -and $input_bytes[7] -eq 0x00 `
+      -and $input_bytes[0] -ne 0x00 -and $input_bytes[2] -ne 0x00 -and $input_bytes[4] -ne 0x00 -and $input_bytes[6] -ne 0x00){
+        return 'UTF16-LE'
+        }
+    elseif($input_bytes[0] -eq 0x00 -and $input_bytes[2] -eq 0x00 -and $input_bytes[4] -eq 0x00 -and $input_bytes[6] -eq 0x00 `
+      -and $input_bytes[1] -ne 0x00 -and $input_bytes[3] -ne 0x00 -and $input_bytes[5] -ne 0x00 -and $input_bytes[7] -ne 0x00){
+        return 'UTF16-BE'
+        }
+    else {
+        return 'ASCII'
+        }
+}
+
+function Base64_Decode {
+    param(
+        [Parameter(Mandatory=$True)]
+        [String[]]$b64_encoded_string
+       )
+
+    try{
+        if($b64_encoded_string -match '^TVqQ'){
+            return [Byte[]][Convert]::FromBase64String($b64_encoded_string)
+            }
+
+        $b64_decoded_ascii = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($b64_encoded_string))
+
+        if($b64_decoded_ascii -match ‘^(.\x00){8,}’){
+            return [System.Text.Encoding]::UNICODE.GetString([System.Convert]::FromBase64String($b64_encoded_string))
+            }
+        else{
+            return $b64_decoded_ascii
+            }
+        }
+    catch{
+        $ErrorMessage = $_.Exception.Message
+        return $false
+        }
+}
+
+function Resolve_String_Formats
+    {
+        param(
+            [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+            [String]$Command
+        )
+
+       $str_format_pattern = [regex]"\(`"({\d+})+`"\s*-f\s*('[^']*',?)+\)"
+       $matches = $str_format_pattern.Matches($Command) 
+
+       While ($matches.Count -gt 0){
+            ForEach($match in $matches){
+                $resolved_string = IEX($match)
+                $Command = $Command.Replace($match, "'$($resolved_string)'")
+                }
+            $matches = $str_format_pattern.Matches($Command) 
+        }
+       
+       return $Command
+
+    }
+
+function Beautify
+    {
+        param(
+            [Parameter(Mandatory=$True)]
+            [char[]]$Command
+        )
+
+        $prev_char = ''
+        $tabs = 0
+        $tab = "`t"
+        $newline = "`r`n"
+        $new_str = ''
+        $in_str = $false
+        $curr_quote_chr = ''
+        $str_quotes = '"', "'"
+        $append_chars = ''
+
+        forEach($char in $Command){
+            if($char -contains $str_quotes -and $in_str -eq $false){
+                $curr_quote_chr=$char
+                $in_str = $true
+            }
+            elseif($char -contains $str_quotes -and $in_str -eq $true -and $curr_quote_chr -eq $char -and $prev_char -ne '`'){
+                $curr_quote_chr=''
+                $in_str = $false
+            }
+            elseif($char -eq '{' -and $in_str -eq $false){
+                $append_chars = $newline + ($tab*++$tabs)
+            }
+            elseif($char -eq '}' -and $in_str -eq $false){
+                $append_chars = $newline + ($tab*--$tabs)
+            }
+            elseif($char -eq ';' -and $in_str -eq $false){
+                $append_chars = $newline + ($tab*$tabs)
+            }
+
+            $new_str = $new_str + $char + $append_chars
+            $prev_char = $char
+            $append_chars = ''
+        }
+    return $new_str
+}
+
+function PSDecode {
+    [CmdletBinding()]
+    param(
+        [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+        [PSObject[]]$InputObject
+       )
+
+    $layers  = New-Object System.Collections.Generic.List[System.Object]
+    $actions = New-Object System.Collections.Generic.List[System.Object]
 
     $override_functions = @()
     $encoded_script = ""
@@ -118,16 +257,29 @@ function new-object {
     if ($PSCmdlet.MyInvocation.ExpectingInput) {
         #from pipe
         $encoded_script = $InputObject
+
     }
     else {
         try {
                 #from file
-                if($u){
-                    $encoded_script = Get-Content $InputObject -Encoding Unicode -ErrorAction Stop
-                   }
+                $script_bytes = Get-Content $InputObject -Encoding byte -ErrorAction Stop
+                $enc_type = Get_Encoding_Type($script_bytes) 
+                if($enc_type -eq 'UTF16-LE' ){
+                    $encoded_script = [System.Text.Encoding]::UNICODE.GetString($script_bytes)
+                }
+                elseif($enc_type -eq 'UTF16-BE' ){
+                    $encoded_script = [System.Text.Encoding]::BigEndianUnicode.GetString($script_bytes)
+                }
                 else{
-                    $encoded_script = Get-Content $InputObject -Encoding Ascii -ErrorAction Stop
-                    }
+                    $encoded_script = [System.Text.Encoding]::ASCII.GetString($script_bytes)
+                }
+
+                $b64_decoded = Base64_Decode($encoded_script)
+
+                if($b64_decoded){
+                    $layers.Add($encoded_script)
+                    $encoded_script = $b64_decoded
+                }
             }
         catch {
                 throw "Error reading: '$($InputObject)'"
@@ -137,16 +289,17 @@ function new-object {
     $override_functions += $Invoke_Expression_Override
     $override_functions += $Invoke_Command_Override
     $override_functions += $Invoke_Item_Override
+    $override_functions += $Get_Item_Override
     $override_functions += $New_Object_Override
 
     $decoder = ($override_functions -join "`r`n") + "`r`n`r`n" + ($encoded_script -replace("``","") -replace('"','\"') -replace("'\s*'", "''"))
 
-    $Layers  = New-Object System.Collections.Generic.List[System.Object]
-    $actions = New-Object System.Collections.Generic.List[System.Object]
+
  
     while($layers -notcontains $encoded_script -and -not [string]::IsNullOrEmpty($encoded_script)){
 
         $layers.Add($encoded_script -replace("``","") -replace("'\+'","") -replace("'\s*'", "''"))
+
         $encoded_script = (powershell $decoder)
 
         if (-not [string]::IsNullOrEmpty($encoded_script) -and $encoded_script.GetType().FullName -eq "System.Object[]" -and $encoded_script -match '%#'){
@@ -162,6 +315,13 @@ function new-object {
          }
 
     if($layers.Count -gt 0){
+        $last_layer = $layers[-1]
+        $str_fmt_res = Resolve_String_Formats($last_layer)
+        
+        if($str_fmt_res -ne $last_layer){
+            $layers.Add($str_fmt_res)
+            }
+
         ForEach ($layer in $layers){
             $heading = "`r`n`r`n" + "#"*30 + " Layer " + ($layers.IndexOf($layer)+1) + " " + "#"*30
             Write-Host $heading
@@ -169,12 +329,18 @@ function new-object {
             }
         }
 
+        $beautiful_str = Beautify($str_fmt_res)
+        $heading = "`r`n`r`n" + "#"*25 + " Beautified Layer " + "#"*26
+        Write-Host $heading
+        Write-Host $beautiful_str
+
     if($actions.Count -gt 0){
         $heading = "`r`n`r`n" + "#"*30 + " Actions " + "#"*30
         Write-Host $heading        
 
-        ForEach ($action in $actions){
-            Write-Host "$($actions.IndexOf($action)+1). $($action)"
+        for ($counter=0; $counter -lt $actions.Length; $counter++){
+            $line = "{0,5}. {1}" -f ($counter+1),$actions[$counter]
+            Write-Host $line
             }
         }
 }
