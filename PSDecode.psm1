@@ -8,7 +8,7 @@
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM
-	Version    : 3.0
+	Version    : 3.1
 .LINK
     https://github.com/R3MRUM/PSDecode
 .LINK
@@ -88,23 +88,23 @@ $New_Object_Override = @'
 function new-object {
         param(
             [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
-            [String]$Obj
+            [object[]]$Obj
         )
 
         if($Obj -ieq 'System.Net.WebClient' -or $Obj -ieq 'Net.WebClient'){
-            $webclient_obj = [PsCustomObject]
-            Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Name "DownloadFile" -Value {
+            $webclient_obj = microsoft.powershell.utility\new-object Net.WebClient
+            Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Force -Name "DownloadFile" -Value {
                 param([string]$url,[string]$destination)
                 Write-Host "%#[System.Net.WebClient.DownloadFile] Download From: $($url) --> Save To: $($destination)"
                 }
-            Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Name "DownloadString" -Value {
+            Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Force -Name "DownloadString" -Value {
                 param([string]$url)
                 Write-Host "%#[System.Net.WebClient.DownloadString] Download from: $($url)"
                 }
             return $webclient_obj
         }
         elseif($Obj -ieq 'random'){
-            $random_obj = [PsCustomObject]
+            $random_obj = microsoft.powershell.utility\new-object Random
             Add-Member -memberType ScriptMethod -InputObject $random_obj -Name "next" -Value {
                 param([int]$min,[int]$max)
                 $random_int = Get-Random -Minimum $min -Maximum $max
@@ -114,7 +114,9 @@ function new-object {
             return $random_obj
         }
         else{
-            Write-Host "ERROR: Unknown object type found: $($Obj)"
+            $unk_obj = microsoft.powershell.utility\new-object $Obj
+            Write-Host "%#[Error] Undefined object type found: $($Obj)"
+            return $unk_obj
         }
     }
 '@
@@ -159,7 +161,7 @@ function Base64_Decode {
 
         $b64_decoded_ascii = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($b64_encoded_string))
 
-        if($b64_decoded_ascii -match '^(.\x00){8,}'){
+        if($b64_decoded_ascii -match '^(.\x00){8,}’){
             return [System.Text.Encoding]::UNICODE.GetString([System.Convert]::FromBase64String($b64_encoded_string))
             }
         else{
@@ -171,6 +173,28 @@ function Base64_Decode {
         return $false
         }
 }
+
+function Replace_Parens
+    {
+        param(
+            [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+            [String]$Command
+        )
+       $str_format_pattern = [regex]"(?i)(?<!split)\(\s*'[^']*'\)"
+       $matches = $str_format_pattern.Matches($Command) 
+
+       While ($matches.Count -gt 0){
+            ForEach($match in $matches){
+                $Command = $Command.Replace($match, $match.ToString().replace('(','').replace(')',''))
+                }
+            $matches = $str_format_pattern.Matches($Command) 
+        }
+       
+       return $Command
+
+    }
 
 function Resolve_String_Formats
     {
@@ -193,6 +217,42 @@ function Resolve_String_Formats
         }
        
        return $Command
+    }
+
+function String_Concat_Cleanup
+    {
+        param(
+            [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+            [String]$Command
+        )
+       
+       return $Command.Replace("'+'", "").Replace('"+"','')
+    }
+
+function Code_Cleanup
+    {
+        param(
+            [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+            [String]$Command
+        )
+
+       $old_command = ''
+       $new_command = $Command
+
+       While($old_command -ne $new_command)
+       {
+            $old_command = $new_command
+
+            $new_command = Replace_Parens($new_command)
+            $new_command = String_Concat_Cleanup($new_command)
+            $new_command = Resolve_String_Formats($new_command)
+        }
+        
+        return $new_command
 
     }
 
@@ -270,7 +330,9 @@ function PSDecode {
                 elseif($enc_type -eq 'UTF16-BE' ){
                     $encoded_script = [System.Text.Encoding]::BigEndianUnicode.GetString($script_bytes)
                 }
-                else{
+                elseif($enc_type -eq 'UTF8'){
+                    $encoded_script = [System.Text.Encoding]::UTF8.GetString($script_bytes)
+                }else{
                     $encoded_script = [System.Text.Encoding]::ASCII.GetString($script_bytes)
                 }
 
@@ -282,7 +344,7 @@ function PSDecode {
                 }
             }
         catch {
-                throw "Error reading: '$($InputObject)'"
+                throw "Error reading: $($InputObject)"
             }
     }
 
@@ -316,7 +378,7 @@ function PSDecode {
 
     if($layers.Count -gt 0){
         $last_layer = $layers[-1]
-        $str_fmt_res = Resolve_String_Formats($last_layer)
+        $str_fmt_res = Code_Cleanup($last_layer)
         
         if($str_fmt_res -ne $last_layer){
             $layers.Add($str_fmt_res)
