@@ -159,7 +159,7 @@ function Base64_Decode {
 
         $b64_decoded_ascii = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($b64_encoded_string))
 
-        if($b64_decoded_ascii -match ‘^(.\x00){8,}’){
+        if($b64_decoded_ascii -match '^(.\x00){8,}'){
             return [System.Text.Encoding]::UNICODE.GetString([System.Convert]::FromBase64String($b64_encoded_string))
             }
         else{
