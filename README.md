@@ -148,6 +148,11 @@ $jZBCCA='TAAAx1'
     3. [Invoke-Item] Execute/Open: C:\Users\REM\625.exe
 ```
 # Change Log
+* 2019.07.07 [v4.1]
+  * Added -timeout arg to limit length of time the decoder should run.
+  * Added more granular decoder exit code and stderr logic. 
+  * Added Base64 encoded executable detection and extraction functionality. If a base64 encoded executable is found embedded within a PowerShell script, it will notify you. The executable can be decoded and saved to disk by passing the -dump switch.
+  * Added additional code cleanup logic.
 * 2019.07.02
   * Made beautification of final layer optional via -beautify switch because complex scripts can break the beautify logic resulting in even uglier output.
   * Added -verbose switch that prints more details to the console regarding what PSDecode is doing during processing. Should help with troubleshooting.
