@@ -25,7 +25,7 @@
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM
-	Version    : 4.1
+	Version    : 4.2
 .LINK
     https://github.com/R3MRUM/PSDecode
 .LINK
@@ -747,11 +747,19 @@ function PSDecode {
             if($exe_matches.Count -gt 0){
                 $extracted_exes = Extract_Executables($exe_matches)
                 Write-Host "Identified $($exe_matches.Count) potential executable(s). Saving to $([System.IO.Path]::GetTempPath())"
-                ForEach($exe in $extracted_exes){
-                    $exe_md5 = Get_MD5($exe)
+                if($exe_matches.Count -eq 1){
+                    $exe_md5 = Get_MD5($extracted_exes)
                     $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
                     Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
-                    $exe | Set-Content $out_filename -Encoding Byte
+                    $extracted_exes | Set-Content $out_filename -Encoding Byte
+                }
+                Else{
+                    ForEach($exe in $extracted_exes){
+                        $exe_md5 = Get_MD5($exe)
+                        $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
+                        Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
+                        $exe | Set-Content $out_filename -Encoding Byte
+                    }
                 }
             }
         }
