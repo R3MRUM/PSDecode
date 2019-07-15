@@ -148,6 +148,8 @@ $jZBCCA='TAAAx1'
     3. [Invoke-Item] Execute/Open: C:\Users\REM\625.exe
 ```
 # Change Log
+* 2019.07.14 [v4.2]
+  * Fix for [Issue #9](https://github.com/R3MRUM/PSDecode/issues/9) -dump switch where only a single encoded executable is present resulted in each byte in the executable being written to individual files.
 * 2019.07.07 [v4.1]
   * Added -timeout arg to limit length of time the decoder should run.
   * Added more granular decoder exit code and stderr logic. 
