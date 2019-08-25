@@ -25,7 +25,7 @@
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM
-	Version    : 4.2
+	Version    : 4.3
 .LINK
     https://github.com/R3MRUM/PSDecode
 .LINK
