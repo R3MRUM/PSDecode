@@ -25,7 +25,7 @@
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM
-	Version    : 4.2
+	Version    : 4.3
 .LINK
     https://github.com/R3MRUM/PSDecode
 .LINK
@@ -268,7 +268,7 @@ function Clean_Func_Calls
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
-                Write-Verbose "[Clean_Func_Calls] Replacing: $($match)`tWith: $($match.ToString().replace('(','').replace(')',''))"
+                Write-Verbose "[Clean_Func_Calls] Replacing: $($match)`tWith: $($match.ToString().replace('"','').replace("'",''))"
                 $Command = $Command.Replace($match, $match.ToString().replace('"','').replace("'",''))
                 }
             $matches = $str_format_pattern.Matches($Command) 
