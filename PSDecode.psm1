@@ -1,45 +1,3 @@
-﻿<#
-.SYNOPSIS
-    Obfuscated PowerShell Script Decoder
-.DESCRIPTION
-    This is a PowerShell script for deobfuscating other encoded PowerShell scripts. Often, malicious PowerShell scripts have several layers of encodings (Replace, Base64Decode, etc...) that, once decoded, are executed via a call to Invoke-Expression (IEX, &, .), Invoke-Command, etc... This script employs a technique called method overriding that enables us to essentially intercept calls to functions that I have accounted for within this script and print out the arguments being passed to it (a.k.a what the script was trying to execute).
-
-    ** Important Note: Only run this script within an isolated sandbox. If the encoded powershell attempts to execute a function which I have not accounted for, there is a chance it could execute.**
-
-.PARAMETER verbose
-    PSDecode will describe in greater detail what it is doing during the decoding process. Can be helpful when troubleshooting
-
-.PARAMETER dump
-    PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filename will be ib the format <lowercase_MD5_of_original>_layer_<layer_number>.txt.
-    For example:
-                c924cb080b1c7d9975d59817f96ca874_layer_1.txt
-                c924cb080b1c7d9975d59817f96ca874_layer_2.txt
-                c924cb080b1c7d9975d59817f96ca874_layer_3.txt
-
-.PARAMETER beautify
-    Attempts to beautify the final layer. This typically works well on simpler scripts but might break on more complex scripts. As a result, I've made this optional.
-
-.PARAMETER timeout
-    Sets the maximum number of seconds the decoder should be allowed to run before it is timed out and terminated. Default is 60 seconds.
-    
-.NOTES
-    File Name  : PSDecode.psm1
-    Author     : @R3MRUM
-	Version    : 4.3
-.LINK
-    https://github.com/R3MRUM/PSDecode
-.LINK
-    https://twitter.com/R3MRUM
-.LINK
-    https://r3mrum.wordpress.coom
-.EXAMPLE
-    PSDecode -verbose -dump -beautify .\encoded_ps.ps1
-
-.EXAMPLE
-    Get-Content .\encoded_ps.ps1 | PSDecode 
-.COMPONENT
-#>
-
 $Invoke_Expression_Override = @'
 function Invoke-Expression()
     {
@@ -536,10 +494,57 @@ function Extract_Executables {
 }
 
 function PSDecode {
+<#
+.SYNOPSIS
+    Obfuscated PowerShell Script Decoder
+.Description
+    This is a PowerShell script for deobfuscating other encoded PowerShell scripts. Often, malicious PowerShell scripts have several layers of encodings (Replace, Base64Decode, etc...) that, once decoded, are executed via a call to Invoke-Expression (IEX, &, .), Invoke-Command, etc... This script employs a technique called method overriding that enables us to essentially intercept calls to functions that I have accounted for within this script and print out the arguments being passed to it (a.k.a what the script was trying to execute).
+
+    ** Important Note: It is highly recommended that you only run this script within an isolated sandbox. If the encoded powershell attempts to execute a function which I have not accounted for, there is a chance it could execute.**
+
+.PARAMETER verbose
+    PSDecode will describe in greater detail what it is doing during the decoding process. Can be helpful when troubleshooting
+
+.PARAMETER dump
+
+PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filename will be ib the format <lowercase_MD5_of_original>_layer_<layer_number>.txt.
+    For example:
+                c924cb080b1c7d9975d59817f96ca874_layer_1.txt
+                c924cb080b1c7d9975d59817f96ca874_layer_2.txt
+                c924cb080b1c7d9975d59817f96ca874_layer_3.txt
+
+.PARAMETER beautify
+    Attempts to beautify the final layer. This typically works well on simpler scripts but might break on more complex scripts. As a result, I've made this optional.
+
+.PARAMETER x
+    Disables the New-Object override. Should only be tried if standard decoding without this switch fails, which is typically the case when PSDecode encounters object arrays. Setting this switch is risky as there is significantly higher likelihood of malicious code execution. Should only be used in an isolated environment.
+
+.PARAMETER timeout
+    Sets the maximum number of seconds the decoder should be allowed to run before it is timed out and terminated. Default is 60 seconds.
+    
+.NOTES
+    File Name  : PSDecode.psm1
+    Author     : @R3MRUM
+	Version    : 4.4
+.LINK
+    https://github.com/R3MRUM/PSDecode
+.LINK
+    https://twitter.com/R3MRUM
+.LINK
+    https://r3mrum.wordpress.coom
+.EXAMPLE
+    PSDecode -verbose -dump -beautify .\encoded_ps.ps1
+
+.EXAMPLE
+    Get-Content .\encoded_ps.ps1 | PSDecode 
+.COMPONENT
+#>
+
     [CmdletBinding()]
       param(
             [Parameter(Mandatory=$false)][switch]$dump,
             [Parameter(Mandatory=$false)][switch]$beautify,
+            [Parameter(Mandatory=$false)][switch]$x,
             [Parameter(Mandatory=$false)][int]$timeout = 60,
             [Parameter(Mandatory=$True, Valuefrompipeline = $True, Position = 0)][PSObject[]]$InputObject
             )
@@ -611,7 +616,11 @@ function PSDecode {
     $override_functions += $Invoke_Command_Override
     $override_functions += $Invoke_Item_Override
     $override_functions += $Get_Item_Override
-    $override_functions += $New_Object_Override
+    
+    if(!$x){
+        $override_functions += $New_Object_Override
+    }
+    
     $override_functions  = ($override_functions -join "`r`n") + "`r`n`r`n"
     
     Write-Verbose 'Performing code cleanup on initial script'
