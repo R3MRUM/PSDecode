@@ -148,6 +148,11 @@ $jZBCCA='TAAAx1'
     3. [Invoke-Item] Execute/Open: C:\Users\REM\625.exe
 ```
 # Change Log
+* 2019.09.01 [v4.4]
+  * Added -x switch to make New-Object override optional, which may result in successful script decoding in times when standard decode fails but at the risk of malicious code execution.
+  * Moved help syntax into PSDecode function block so that 'Get-Help PSDecode' properly displays cmdlet help information
+* 2019.08.24 [v4.3]
+  * Verbose logging message referenced actions for another function. Updated message to reflect actual action being performed. Reported as [Issue #10](https://github.com/R3MRUM/PSDecode/issues/10)
 * 2019.07.14 [v4.2]
   * Fix for [Issue #9](https://github.com/R3MRUM/PSDecode/issues/9) -dump switch where only a single encoded executable is present resulted in each byte in the executable being written to individual files.
 * 2019.07.07 [v4.1]
