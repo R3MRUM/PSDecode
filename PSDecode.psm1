@@ -104,7 +104,6 @@ function Get_Encoding_Type {
     Write-Verbose 'Detecting encoding type...'
     $enc_type = ''
     if($input_bytes[0] -eq 0xEF -and $input_bytes[1] -eq 0xBB -and $input_bytes[2] -eq 0xBF){
-
         $enc_type = 'UTF8'
         }
     elseif($input_bytes[0] -eq 0xFE -and $input_bytes[1] -eq 0xFF){
@@ -146,24 +145,26 @@ function Base64_Decode {
         [String[]]$b64_encoded_string
        )
 
+    if($b64_encoded_string -match '^TVqQ'){
+        return [Byte[]][Convert]::FromBase64String($b64_encoded_string)
+    }
+    
     try{
-        if($b64_encoded_string -match '^TVqQ'){
-            return [Byte[]][Convert]::FromBase64String($b64_encoded_string)
-            }
-
-        $b64_decoded_ascii = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($b64_encoded_string))
-
-        if($b64_decoded_ascii -match '^(.\x00){8,}'){
-            return [System.Text.Encoding]::UNICODE.GetString([System.Convert]::FromBase64String($b64_encoded_string))
-            }
-        else{
-            return $b64_decoded_ascii
-            }
+        $b64_decoded = [System.Convert]::FromBase64String($b64_encoded_string)
         }
     catch{
+        Write-Verbose "Not a valid Base64 string"
         $ErrorMessage = $_.Exception.Message
         return $false
-        }
+    }
+       
+    $b64_decoded_ascii = [System.Text.Encoding]::ASCII.GetString($b64_decoded)
+    if($b64_decoded_ascii -match '^(.\x00){8,}'){
+        return [System.Text.Encoding]::UNICODE.GetString([System.Convert]::FromBase64String($b64_encoded_string))
+    }
+    else{
+        return $b64_decoded_ascii
+    }
 }
 
 function Replace_Quotes_FuncName
@@ -337,8 +338,8 @@ function Resolve_String_Formats
                 Valuefrompipeline = $True)]
             [String]$Command
         )
-
-       $str_format_pattern = [regex]"\(`"({\d+})+`"\s*-[fF]\s*('[^']*',?)+\)"
+       $str_format_pattern = [regex]"\(`"({\d+})+`"\s*-[fF]\s*(('[^']*'|\('[^']*'\))\s*,?\s*)*\)"
+       #$str_format_pattern = [regex]"\(`"({\d+})+`"\s*-[fF]\s*('[^']*',?)+\)"
        $matches = $str_format_pattern.Matches($Command) 
 
        While ($matches.Count -gt 0){
@@ -493,6 +494,56 @@ function Extract_Executables {
 
 }
 
+function Dump_Files {
+    param(
+            [Parameter(Mandatory=$True)]
+            [System.Collections.Generic.List[System.Object]]$layers
+         )
+
+    Write-Host "Saving layers to $([System.IO.Path]::GetTempPath())"
+    
+    ForEach ($layer in $layers)
+        {
+            $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_layer_$($layers.IndexOf($layer)+1).txt"
+            Write-Host "Writing $($out_filename)"
+            $layer | Out-File $out_filename
+        }
+
+    if($beautify)
+        {
+            $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_layer_$($layers.count + 1).txt"
+            Write-Host "Writing $($out_filename)"
+            Beautify($str_fmt_res) | Out-File $out_filename
+        }
+
+    $exe_str_format_pattern = [regex]"TVqQ[^'`"]{100,}"
+    $exe_matches = $exe_str_format_pattern.Matches($layers[-1])
+
+    if($exe_matches.Count -gt 0)
+        {
+            $extracted_exes = Extract_Executables($exe_matches)
+            Write-Host "Identified $($exe_matches.Count) potential executable(s). Saving to $([System.IO.Path]::GetTempPath())"
+
+            if($exe_matches.Count -eq 1)
+                {
+                    $exe_md5 = Get_MD5($extracted_exes)
+                    $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
+                    Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
+                    $extracted_exes | Set-Content $out_filename -Encoding Byte
+                }
+            Else
+                {
+                    ForEach($exe in $extracted_exes)
+                        {
+                        $exe_md5 = Get_MD5($exe)
+                        $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
+                        Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
+                        $exe | Set-Content $out_filename -Encoding Byte
+                        }
+                }
+        }
+}
+
 function PSDecode {
 <#
 .SYNOPSIS
@@ -525,7 +576,7 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM
-	Version    : 4.4
+    Version    : 5.0
 .LINK
     https://github.com/R3MRUM/PSDecode
 .LINK
@@ -567,8 +618,13 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
     }
     else {
         try {
-        Write-Verbose "Input received from file: $($InputObject)"
-        $script_bytes = Get-Content $InputObject -Raw -Encoding byte -ErrorAction Stop
+            Write-Verbose "Input received from file: $($InputObject)"
+            if($IsLinux -or $IsMacOs){
+                $script_bytes = Get-Content $InputObject -Raw -AsByteStream -ErrorAction Stop
+            }
+            else{
+                $script_bytes = Get-Content $InputObject -Raw -Encoding byte -ErrorAction Stop
+            }
         }
         catch {
                 throw "Error reading: $($InputObject)"
@@ -594,14 +650,14 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         $encoded_script = [System.Text.Encoding]::BigEndianUnicode.GetString($script_bytes).substring(2)
     }
     elseif($enc_type -eq 'UTF8'){
-    $encoded_script = [System.Text.Encoding]::UTF8.GetString($script_bytes).substring(1)
-    }
+        $encoded_script = [System.Text.Encoding]::UTF8.GetString($script_bytes).substring(1)
+        }
     else{
         $encoded_script = [System.Text.Encoding]::ASCII.GetString($script_bytes)
     }
 
     Write-Verbose 'Testing input to see if Base64 encoded'
-    $b64_decoded = Base64_Decode($encoded_script)
+    $b64_decoded = Base64_Decode($encoded_script.Trim())
 
     if($b64_decoded){
         Write-Verbose 'Input was Base64 encoded. Decoding was successful. Saved original Base64 encoded string as layer'
@@ -644,7 +700,7 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         $layers.Add($encoded_script)
         
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo
-        $pinfo.FileName = "powershell.exe"
+        $pinfo.FileName = "powershell"
         $pinfo.CreateNoWindow = $true
         $pinfo.RedirectStandardError = $true
         $pinfo.RedirectStandardOutput = $true
@@ -733,45 +789,9 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
             $layers.Add($str_fmt_res)
         }
 
-        $exe_str_format_pattern = [regex]"TVqQ[^'`"]{100,}"
-        $exe_matches = $exe_str_format_pattern.Matches($layers[-1])
-        $exe_extracted = 
-
         if($dump){
             
-            Write-Host "Saving layers to $([System.IO.Path]::GetTempPath())"
-
-            ForEach ($layer in $layers){
-            $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_layer_$($layers.IndexOf($layer)+1).txt"
-            Write-Host "Writing $($out_filename)"
-            $layer | Out-File $out_filename
-            }
-
-            if($beautify){
-
-                $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_layer_$($layers.count + 1).txt"
-                Write-Host "Writing $($out_filename)"
-                Beautify($str_fmt_res) | Out-File $out_filename
-            }
-
-            if($exe_matches.Count -gt 0){
-                $extracted_exes = Extract_Executables($exe_matches)
-                Write-Host "Identified $($exe_matches.Count) potential executable(s). Saving to $([System.IO.Path]::GetTempPath())"
-                if($exe_matches.Count -eq 1){
-                    $exe_md5 = Get_MD5($extracted_exes)
-                    $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
-                    Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
-                    $extracted_exes | Set-Content $out_filename -Encoding Byte
-                }
-                Else{
-                    ForEach($exe in $extracted_exes){
-                        $exe_md5 = Get_MD5($exe)
-                        $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
-                        Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
-                        $exe | Set-Content $out_filename -Encoding Byte
-                    }
-                }
-            }
+            Dump_Files($layers)
         }
 
         ForEach ($layer in $layers){
@@ -781,7 +801,7 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         }
     }
 
-    if(-not $err -and -not $stderr){
+    if($p.ExitCode -eq 0 ){#-and -not $stderr){
         if($beautify){
             $beautiful_str = Beautify($str_fmt_res)
             $heading = "`r`n`r`n" + "#"*25 + " Beautified Layer " + "#"*26
