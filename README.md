@@ -5,18 +5,27 @@ This is a PowerShell script for deobfuscating other encoded PowerShell scripts. 
 
 ** Important Note #2: The default execution policy for PowerShell is Restricted and if you dont use PowerShell a lot, chances are when you go to run this script, it will give you an error stating "PSDecode cannot be loaded because the execution of scripts is disabled on this system". If you receive this message, you'll need to change you execution policy to Unrestricted either temporarility or permanantly. The simplest way is to open a PowerShell command prompt as Administrator and run: set-executionpolicy unrestricted**
 
-# To Use
-1. Copy PSDecode.psm1 into $PSHome\Modules\
-2. Open a new instance of PowerShell
-3. Option #1 [Pass encoded PowerShell via File]:
+# To Install
+## Windows
+1. Create a directory named PSDecode within $PSHome\Modules
+2. Copy PSDecode.psm1 into $PSHome\Modules\PSDecode\
+3. Open a new instance of PowerShell
+
+## Linux
+1. Run the following command to identify the different paths specified within the PSModulePath environement variable:
+    * **printenv PSModulePath**
+    * *Example Output: /home/R3MRUM/.local/share/powershell/Modules:/usr/local/share/powershell/Modules:/snap/powershell/77/opt/powershell/Modules**
+    * Everyone's setup is different but you'll most likely want to use the path within your user directory
+2. Create a directory named PSDecode within your chosen PSModulePath directory:
+    * **mkdir ~/.local/share/powershell/Modules/PSDecode**
+3. Move PSDecode.psm1 into this newly created directory
+4. Open a new instance of PowerShell
+
+# To Run
+1. Option #1 [Pass encoded PowerShell via File]:
 <pre> > PSDecode .\encoded_ps.ps1</pre>
-4. Option #2 [Pass encoded PowerShell via PIPE]:
+2. Option #2 [Pass encoded PowerShell via PIPE]:
 <pre> > Get-Content .\encoded_ps.ps1 | PSDecode </pre>
-
-# Example Powershell Scripts
-In this repository, I've included Emotet_PowerShell_Examples.zip, which contains a few different **LIVE** emotet PowerShell scripts. You can use these to play around with PSDecode and get a better understanding of how it is supposed to function. It is important to note that **these examples are malicious** and could potentially result in an infection if handled improperly. These are provided for educational purposes only and I assume no responsibility for what you do with them. You've been warned.
-
-The password for the archive is: **infected**
 
 # Output Example
 > PSDecode -dump -beautify -verbose .\evil.ps1
@@ -149,7 +158,7 @@ $jZBCCA='TAAAx1'
 ```
 # Change Log
 * 2019.12.12 [v5.0]
- * PowerShell Core Support. Can now run PSDecode on Linux.
+ * PowerShell Core Support. Can now run PSDecode on Linux. Tested with PowerShell Core v6.2.3 on Ubuntu 19.04. Should also work on MacOS but this has not been tested.
  * Improved regex for string replace resolution function
 * 2019.09.01 [v4.4]
   * Added -x switch to make New-Object override optional, which may result in successful script decoding in times when standard decode fails but at the risk of malicious code execution.
