@@ -14,7 +14,7 @@ This is a PowerShell script for deobfuscating other encoded PowerShell scripts. 
 ## Linux
 1. Run the following command to identify the different paths specified within the PSModulePath environement variable:
     * **printenv PSModulePath**
-    * *Example Output: /home/R3MRUM/.local/share/powershell/Modules:/usr/local/share/powershell/Modules:/snap/powershell/77/opt/powershell/Modules**
+    * *Example Output: /home/R3MRUM/.local/share/powershell/Modules:/usr/local/share/powershell/Modules:/snap/powershell/77/opt/powershell/Modules*
     * Everyone's setup is different but you'll most likely want to use the path within your user directory
 2. Create a directory named PSDecode within your chosen PSModulePath directory:
     * **mkdir ~/.local/share/powershell/Modules/PSDecode**
