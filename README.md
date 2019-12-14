@@ -158,7 +158,7 @@ $jZBCCA='TAAAx1'
 ```
 # Change Log
 * 2019.12.12 [v5.0]
-  * PowerShell Core Support. Can now run PSDecode on Linux. Tested with PowerShell Core v6.2.3 on Ubuntu 19.04. Should also work on MacOS but this has not been tested.
+  * PowerShell Core Support. Can now run PSDecode on Linux. Tested with PowerShell Core v6.2.3 on Ubuntu 19.04. Should also work on MacOS but this has not been tested. [Issue #8](https://github.com/R3MRUM/PSDecode/issues/8)
   * Improved regex for string replace resolution function
 * 2019.09.01 [v4.4]
   * Added -x switch to make New-Object override optional, which may result in successful script decoding in times when standard decode fails but at the risk of malicious code execution.
