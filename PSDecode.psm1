@@ -706,7 +706,7 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         $pinfo.RedirectStandardOutput = $true
         $pinfo.UseShellExecute = $false
 
-        if($b64_decoder.length -le 12190){
+        if($b64_decoder.length -le 8000){
             $pinfo.Arguments = "-EncodedCommand $($b64_decoder)"
         }
         else{
