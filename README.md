@@ -157,6 +157,8 @@ $jZBCCA='TAAAx1'
     3. [Invoke-Item] Execute/Open: C:\Users\REM\625.exe
 ```
 # Change Log
+* 2019.12.30 [v5.1]
+  * Bug Fix: Changed encoded command length check to write to temp file if length of encoded command is less than 8k bytes. The previous value (12190) referred to the max length of script blocks permitted by PowerShell. However, for Windows XP+, the max command-line length is 8191 bytes, which is the value that should be respected. [Issue #12](https://github.com/R3MRUM/PSDecode/issues/12)
 * 2019.12.12 [v5.0]
   * PowerShell Core Support. Can now run PSDecode on Linux. Tested with PowerShell Core v6.2.3 on Ubuntu 19.04. Should also work on MacOS but this has not been tested. [Issue #8](https://github.com/R3MRUM/PSDecode/issues/8)
   * Improved regex for string replace resolution function
