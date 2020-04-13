@@ -21,6 +21,9 @@ This is a PowerShell script for deobfuscating other encoded PowerShell scripts. 
 3. Move PSDecode.psm1 into this newly created directory
 4. Open a new instance of PowerShell
 
+# Help
+In a PowerShell console, run **Get-Help PSDecode -Detailed**
+
 # To Run
 1. Option #1 [Pass encoded PowerShell via File]:
 <pre> > PSDecode .\encoded_ps.ps1</pre>
