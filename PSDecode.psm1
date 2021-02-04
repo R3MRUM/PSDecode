@@ -246,18 +246,18 @@ function Replace_Parens
                 Valuefrompipeline = $True)]
             [String]$Command
         )
-       $str_format_pattern = [regex]"[^a-zA-Z0-9.&(]\(\s*'[^']*'\)"
-       $matches = $str_format_pattern.Matches($Command) 
 
-       While ($matches.Count -gt 0){
+        $str_format_pattern1 = [regex]"\([ \t]*'[^']*'\)"
+        $str_format_pattern2 = [regex]'\([ \t]*"[^"]*"\)'
+        Do {
+            $matches = $str_format_pattern1.Matches($Command) + $str_format_pattern2.Matches($Command)
             ForEach($match in $matches){
                 Write-Verbose "[Replace_Parens] Replacing: $($match)`tWith: $($match.ToString().replace('(','').replace(')',''))"
                 $Command = $Command.Replace($match, $match.ToString().replace('(','').replace(')',''))
-                }
-            $matches = $str_format_pattern.Matches($Command) 
-        }
-       
-       return $Command
+            }
+        } While ($matches.Count -gt 0)
+        
+        return $Command
 
     }
 
@@ -318,9 +318,7 @@ function Replace_MultiLineEscapes
 
 
         While ($matches.Count -gt 0){
-            if($matches.Count -gt 0){
-                Write-Verbose "$($matches.Count) instances of multi-line escape characters detected... Removing"
-            }
+            Write-Verbose "$($matches.Count) instances of multi-line escape characters detected... Removing"
             ForEach($match in $matches){
                 
                 $Command = $Command.Replace($match, ' ')
@@ -338,20 +336,20 @@ function Resolve_String_Formats
                 Valuefrompipeline = $True)]
             [String]$Command
         )
-       $str_format_pattern = [regex]"\(`"({\d+})+`"\s*-[fF]\s*(('[^']*'|\('[^']*'\))\s*,?\s*)*\)"
-       #$str_format_pattern = [regex]"\(`"({\d+})+`"\s*-[fF]\s*('[^']*',?)+\)"
-       $matches = $str_format_pattern.Matches($Command) 
 
-       While ($matches.Count -gt 0){
+        $str_format_pattern1 = [regex]"\('([^{']*{\d+}[^']*)+'\s*-[fF]\s*([^)(]+|(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)"
+        $str_format_pattern2 = [regex]'\("([^{"]*{\d+}[^"]*)+"\s*-[fF]\s*([^)(]+|(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)'
+
+        Do {
+            $matches = $str_format_pattern1.Matches($Command) + $str_format_pattern2.Matches($Command)
             ForEach($match in $matches){
                 $resolved_string = IEX($match)
                 Write-Verbose "[Resolve_String_Formats] Replacing: $($match)`tWith: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
-                }
-            $matches = $str_format_pattern.Matches($Command) 
-        }
-       
-       return $Command
+            }
+        } While ($matches.Count -gt 0)
+        
+        return $Command
     }
 
 function Resolve_Replaces
@@ -362,21 +360,30 @@ function Resolve_Replaces
                 Valuefrompipeline = $True)]
             [String]$Command
         )
+        
+        $str_format_pattern = [regex]"(?:\(['`"][^'`"]+['`"]\)|['`"][^'`"]+['`"])\.(?i)replace\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)),((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)"
+        $matches = $str_format_pattern.Matches($Command)
 
-       $str_format_pattern = [regex]"\(?['`"][^'`"]+['`"]\)?\.(?i)replace\([^,]+,[^\)]+\)"
-       $matches = $str_format_pattern.Matches($Command)
-
-       While ($matches.Count -gt 0){
+        While ($matches.Count -gt 0){
             ForEach($match in $matches){
-                $resolved_string = IEX($match)
+                $fullMatch = $match.Groups[0].Value
+                $repl = $match.Groups[1].Value
+                if (iex($repl)) {
+                    $replPatched = $repl
+                } else {
+                    $replPatched = "'`$XXX'"
+                    Write-Warning "Please check for `$XXX and replace with the correct value from '$($repl)'!"
+                }
+                $fullMatchPatched = $fullMatch.replace($repl, $replPatched)
+                $resolved_string = IEX($fullMatchPatched)
                 $resolved_string = $resolved_string.replace("'","''")
-                Write-Verbose "[Resolve_Replaces] Replacing: $($match)`tWith: $($resolved_string)"
-                $Command = $Command.Replace($match, "'$($resolved_string)'")
+                Write-Verbose "[Resolve_Replaces] Replacing: $($fullMatch)`tWith: $($resolved_string)"
+                $Command = $Command.Replace($fullMatch, "'$($resolved_string)'")
                 }
             $matches = $str_format_pattern.Matches($Command) 
         }
-       
-       return $Command
+        
+        return $Command
     }
 
 function String_Concat_Cleanup
@@ -387,7 +394,18 @@ function String_Concat_Cleanup
                 Valuefrompipeline = $True)]
             [String]$Command
         )
-       return $Command.Replace("'+'", "").Replace('"+"','')
+        
+        $str_format_pattern1 = [regex]"([^']{0,10})'[ \t]*\+[ \t]*'(.{0,10})"
+        $str_format_pattern2 = [regex]'([^"]{0,10})"[ \t]*\+[ \t]*"(.{0,10})'
+        Do {
+            $matches = $str_format_pattern1.Matches($Command) + $str_format_pattern2.Matches($Command)
+            ForEach($match in $matches){
+                Write-Verbose "[String_Concat_Cleanup] Replacing: $($match)`tWith: $($match.Groups[1].Value)$($match.Groups[2].Value)"
+                $Command = $Command.Replace($match, "$($match.Groups[1].Value)$($match.Groups[2].Value)")
+            }
+        } While ($matches.Count -gt 0)
+        
+        return $Command
     }
 
 function Code_Cleanup
